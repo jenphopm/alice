@@ -78,11 +78,9 @@ class _MyHomePageState extends State<MyHomePage> {
 
   callLogin() async {
     try {
-      var response = await http
-          .post(Uri.parse('http://192.168.1.60:8080/Service/VerifyAuth'), body: {
-        'user': _username.text,
-        'pass': _password.text
-      });
+      var response = await http.post(
+          Uri.parse('http://192.168.1.60:8080/Service/VerifyAuth'),
+          body: {'user': _username.text, 'pass': _password.text});
       // print("value ${response.body}");
       Map<String, dynamic> result = jsonDecode(response.body);
       // Map<String, dynamic> personData = result['personData'];
@@ -93,6 +91,12 @@ class _MyHomePageState extends State<MyHomePage> {
         identityAuth = result['IdentityAuth'].toString();
         token = result['Token'].toString();
       });
+      if (identityAuth == 'true') {
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => const SecondRoute()),
+        );
+      }
     } catch (err) {
       // ignore: avoid_print
       print("error ${err.toString()}");
@@ -161,7 +165,9 @@ class _MyHomePageState extends State<MyHomePage> {
                             primary: Colors.white,
                             textStyle: const TextStyle(fontSize: 20),
                           ),
-                          onPressed: () async { await callLogin();},
+                          onPressed: () async {
+                            await callLogin();
+                          },
                           child: const Text('Login'),
                         ),
                       ],
@@ -170,30 +176,30 @@ class _MyHomePageState extends State<MyHomePage> {
                 ],
               ),
             ),
-            Container(
-              margin: const EdgeInsets.only(bottom: 20.0),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  Text(
-                    identityAuth,
-                    style: Theme.of(context).textTheme.headline4,
-                  ),
-                ],
-              ),
-            ),
-            Container(
-              margin: const EdgeInsets.only(bottom: 20.0),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  Text(
-                    token,
-                    style: Theme.of(context).textTheme.headline4,
-                  ),
-                ],
-              ),
-            ),
+            // Container(
+            //   margin: const EdgeInsets.only(bottom: 20.0),
+            //   child: Column(
+            //     mainAxisAlignment: MainAxisAlignment.center,
+            //     children: <Widget>[
+            //       Text(
+            //         identityAuth,
+            //         style: Theme.of(context).textTheme.headline4,
+            //       ),
+            //     ],
+            //   ),
+            // ),
+            // Container(
+            //   margin: const EdgeInsets.only(bottom: 20.0),
+            //   child: Column(
+            //     mainAxisAlignment: MainAxisAlignment.center,
+            //     children: <Widget>[
+            //       Text(
+            //         token,
+            //         style: Theme.of(context).textTheme.headline4,
+            //       ),
+            //     ],
+            //   ),
+            // ),
           ],
         ),
       ),
@@ -201,6 +207,27 @@ class _MyHomePageState extends State<MyHomePage> {
       //   onPressed: login,
       //   child: const Icon(Icons.add),
       // ),
+    );
+  }
+}
+
+class SecondRoute extends StatelessWidget {
+  const SecondRoute({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text("Second Route"),
+      ),
+      body: Center(
+        child: ElevatedButton(
+          onPressed: () {
+            // Navigate back to first route when tapped.
+          },
+          child: const Text('Go back!'),
+        ),
+      ),
     );
   }
 }

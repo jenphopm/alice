@@ -1,10 +1,10 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:geocoding/geocoding.dart';
-import 'package:geolocator/geolocator.dart';
 import 'dart:math';
 import 'package:http/http.dart' as http;
+
+import 'package:alice/checkin.dart';
 
 void main() {
   runApp(const MyApp());
@@ -97,8 +97,8 @@ class _MyHomePageState extends State<MyHomePage> {
         Navigator.push(
           context,
           MaterialPageRoute(
-              builder: (context) => const MySecondRoute(
-                    title: 'Location',
+              builder: (context) => const MyMainMenuRoute(
+                    title: 'Menu',
                   )),
         );
       }
@@ -216,121 +216,42 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 }
 
-class MySecondRoute extends StatefulWidget {
-  const MySecondRoute({Key? key, required this.title}) : super(key: key);
+class MyMainMenuRoute extends StatefulWidget {
+  const MyMainMenuRoute({Key? key, required this.title}) : super(key: key);
 
   final String title;
 
   @override
-  State<MySecondRoute> createState() => _MySecondRouteState();
+  State<MyMainMenuRoute> createState() => _MyMainMenuRouteState();
 }
 
-class _MySecondRouteState extends State<MySecondRoute> {
-  var longS = "";
-  var latS = "";
-  var address = "";
-
-  Future<Position> _getGeoLocationPosition() async {
-    bool serviceEnabled;
-    LocationPermission permission;
-    // Test if location services are enabled.
-    serviceEnabled = await Geolocator.isLocationServiceEnabled();
-    if (!serviceEnabled) {
-      // Location services are not enabled don't continue
-      // accessing the position and request users of the
-      // App to enable the location services.
-      await Geolocator.openLocationSettings();
-      return Future.error('Location services are disabled.');
-    }
-    permission = await Geolocator.checkPermission();
-    if (permission == LocationPermission.denied) {
-      permission = await Geolocator.requestPermission();
-      if (permission == LocationPermission.denied) {
-        // Permissions are denied, next time you could try
-        // requesting permissions again (this is also where
-        // Android's shouldShowRequestPermissionRationale
-        // returned true. According to Android guidelines
-        // your App should show an explanatory UI now.
-        return Future.error('Location permissions are denied');
-      }
-    }
-    if (permission == LocationPermission.deniedForever) {
-      // Permissions are denied forever, handle appropriately.
-      return Future.error(
-          'Location permissions are permanently denied, we cannot request permissions.');
-    }
-    // When we reach here, permissions are granted and we can
-    // continue accessing the position of the device.
-    return await Geolocator.getCurrentPosition(
-        desiredAccuracy: LocationAccuracy.high);
-  }
-
-  Future<void> GetAddressFromLatLong(Position position) async {
-    List<Placemark> placemarks =
-        await placemarkFromCoordinates(position.latitude, position.longitude);
-    print(placemarks);
-    Placemark place = placemarks[0];
-    setState(() {
-      longS = position.longitude.toString();
-      latS = position.latitude.toString();
-      address =
-          '${place.street}, ${place.subLocality}, ${place.locality}, ${place.postalCode}, ${place.country}';
-    });
-  }
-
+class _MyMainMenuRouteState extends State<MyMainMenuRoute> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Second Route"),
+        title: const Text("Menu"),
       ),
       body: Container(
-          margin: const EdgeInsets.only(left: 20.0, right: 20.0),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              Container(
-                margin: const EdgeInsets.only(bottom: 20.0),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    Text(
-                      longS + " : " + latS,
-                      style: Theme.of(context).textTheme.headline4,
-                    ),
-                  ],
-                ),
-              ),
-              Container(
-                margin: const EdgeInsets.only(bottom: 20.0),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    Text(
-                      address,
-                      style: Theme.of(context).textTheme.headline4,
-                    ),
-                  ],
-                ),
-              ),
-              Container(
-                margin: const EdgeInsets.only(bottom: 20.0),
-                child: ElevatedButton(
-                    onPressed: () async {
-                      Position position = await _getGeoLocationPosition();
-                      GetAddressFromLatLong(position);
-                    },
-                    child: const Text('Get Location')),
-              )
-            ],
-          )
-          // child: ElevatedButton(
-          //   onPressed: () {
-          //     // Navigate back to first route when tapped.
-          //   },
-          //   child: const Text('Go back!'),
-          // ),
+        margin: const EdgeInsets.only(bottom: 20.0),
+        child: TextButton(
+          style: TextButton.styleFrom(
+            padding: const EdgeInsets.all(16.0),
+            primary: Colors.blue,
+            textStyle: const TextStyle(fontSize: 20),
           ),
+          onPressed: () async {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => const MyCheckInRoute(
+                        title: 'Check In',
+                      )),
+            );
+          },
+          child: const Text('Check In'),
+        ),
+      ),
     );
   }
 }

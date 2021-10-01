@@ -1,5 +1,9 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'dart:math';
+
+import 'package:http/http.dart' as http;
 
 void main() {
   runApp(const MyApp());
@@ -59,13 +63,40 @@ class _MyHomePageState extends State<MyHomePage> {
   final _password = TextEditingController();
   String resultUsername = "";
   String resultPassword = "";
+  String identityAuth = "";
+  String token = "";
   // int _counter = 0;
 
-  void login() {
-    setState(() {
-      resultUsername = _username.text;
-      resultPassword = _password.text;
-    });
+  // void login() {
+  //   setState(() {
+  //     resultUsername = _username.text;
+  //     resultPassword = _password.text;
+  //     identityAuth = "";
+  //     token = "";
+  //   });
+  // }
+
+  callLogin() async {
+    try {
+      var response = await http
+          .post(Uri.parse('http://192.168.1.60:8080/Service/VerifyAuth'), body: {
+        'user': _username.text,
+        'pass': _password.text
+      });
+      // print("value ${response.body}");
+      Map<String, dynamic> result = jsonDecode(response.body);
+      // Map<String, dynamic> personData = result['personData'];
+      // ignore: avoid_print
+      print("value ${result.toString()}");
+      // print("personData1: ${personData.toString()}");
+      setState(() {
+        identityAuth = result['IdentityAuth'].toString();
+        token = result['Token'].toString();
+      });
+    } catch (err) {
+      // ignore: avoid_print
+      print("error ${err.toString()}");
+    }
   }
 
   @override
@@ -130,7 +161,7 @@ class _MyHomePageState extends State<MyHomePage> {
                             primary: Colors.white,
                             textStyle: const TextStyle(fontSize: 20),
                           ),
-                          onPressed: login,
+                          onPressed: () async { await callLogin();},
                           child: const Text('Login'),
                         ),
                       ],
@@ -145,7 +176,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
                   Text(
-                    resultUsername,
+                    identityAuth,
                     style: Theme.of(context).textTheme.headline4,
                   ),
                 ],
@@ -157,7 +188,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
                   Text(
-                    resultPassword,
+                    token,
                     style: Theme.of(context).textTheme.headline4,
                   ),
                 ],

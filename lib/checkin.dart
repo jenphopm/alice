@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 
+import 'package:http/http.dart' as http;
+
 class MyCheckInRoute extends StatefulWidget {
   const MyCheckInRoute({Key? key, required this.title}) : super(key: key);
 
@@ -60,8 +62,20 @@ class _MyCheckInRouteState extends State<MyCheckInRoute> {
       longS = position.longitude.toString();
       latS = position.latitude.toString();
       address =
-          '${place.street}, ${place.subLocality}, ${place.locality}, ${place.postalCode}, ${place.country}';
+          '${place.street}, ${place.subLocality}, ${place.locality}, ${place.administrativeArea}, ${place.country}, ${place.postalCode}';
     });
+
+    var response = await http.post(
+          Uri.parse('http://192.168.1.62:8080/Service/CheckIn'),
+          body: {
+                  'street': place.street, 
+                  'subLocality': place.subLocality,
+                  'locality': place.locality,
+                  'administrativeArea': place.administrativeArea,
+                  'country' : place.country,
+                  'postalCode': place.postalCode
+                  }
+          );
   }
 
   @override
@@ -106,7 +120,7 @@ class _MyCheckInRouteState extends State<MyCheckInRoute> {
                       Position position = await _getGeoLocationPosition();
                       GetAddressFromLatLong(position);
                     },
-                    child: const Text('Get Location')),
+                    child: const Text('Check In')),
               )
             ],
           )

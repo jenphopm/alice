@@ -5,7 +5,7 @@ import 'package:geolocator/geolocator.dart';
 import 'package:http/http.dart' as http;
 
 class MyCheckInRoute extends StatefulWidget {
-  const MyCheckInRoute({Key? key, required this.title}) : super(key: key);
+  const MyCheckInRoute({Key key, this.title}) : super(key: key);
 
   final String title;
 
@@ -65,17 +65,15 @@ class _MyCheckInRouteState extends State<MyCheckInRoute> {
           '${place.street}, ${place.subLocality}, ${place.locality}, ${place.administrativeArea}, ${place.country}, ${place.postalCode}';
     });
 
-    var response = await http.post(
-          Uri.parse('http://192.168.1.62:8080/Service/CheckIn'),
-          body: {
-                  'street': place.street, 
-                  'subLocality': place.subLocality,
-                  'locality': place.locality,
-                  'administrativeArea': place.administrativeArea,
-                  'country' : place.country,
-                  'postalCode': place.postalCode
-                  }
-          );
+    var response = await http
+        .post(Uri.parse('http://192.168.1.62:8080/Service/CheckIn'), body: {
+      'street': place.street,
+      'subLocality': place.subLocality,
+      'locality': place.locality,
+      'administrativeArea': place.administrativeArea,
+      'country': place.country,
+      'postalCode': place.postalCode
+    });
   }
 
   @override

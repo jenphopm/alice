@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:alice/user_login_result.dart';
+import 'package:alice/result/user_login_result.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:geocoding/geocoding.dart';

@@ -135,15 +135,15 @@ class _CheckinPageState extends State<CheckinPage> {
     var formatter = DateFormat('ddMMyyyyhhmma');
     var fileName = formatter.format(dateTime);
 
-    print(widget.loginData.user + '/' + fileName + '.jpg');
+    print(widget.loginData.identity.username + '/' + fileName + '.jpg');
 
     // Uploading the selected image with some custom meta data
     await storage
         .ref()
-        .child(widget.loginData.user + '/' + fileName + '.jpg')
+        .child(widget.loginData.identity.username + '/' + fileName + '.jpg')
         .putFile(imageFile);
 
-    return widget.loginData.user + '/' + fileName + '.jpg';
+    return widget.loginData.identity.username + '/' + fileName + '.jpg';
   }
 
   @override

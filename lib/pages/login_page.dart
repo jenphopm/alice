@@ -29,7 +29,7 @@ class _LoginPageState extends State<LoginPage> {
     print("response ${response.body}");
 
     // var result = response.body;
-    var result = userLoginResultFromJson(response.body, _username.text);
+    var result = userLoginResultFromJson(response.body);
     // setState(() {
     //   _dataFromLogin = userLoginResultFromJson(result);
     // });

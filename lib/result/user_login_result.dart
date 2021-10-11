@@ -4,8 +4,8 @@
 
 import 'dart:convert';
 
-UserLoginResult userLoginResultFromJson(String str,String user) =>
-    UserLoginResult.fromJson(json.decode(str), user);
+UserLoginResult userLoginResultFromJson(String str) =>
+    UserLoginResult.fromJson(json.decode(str));
 
 String userLoginResultToJson(UserLoginResult data) =>
     json.encode(data.toJson());
@@ -14,24 +14,59 @@ class UserLoginResult {
   UserLoginResult({
     this.identityAuth,
     this.token,
-    this.user
+    this.identity,
   });
 
   bool identityAuth;
   String token;
-  String user;
+  Identity identity;
 
-  factory UserLoginResult.fromJson(Map<String, dynamic> json, String _user) =>
+  factory UserLoginResult.fromJson(Map<String, dynamic> json) =>
       UserLoginResult(
-        identityAuth:
-            json["IdentityAuth"] == null ? null : json["IdentityAuth"],
-        token: json["Token"] == null ? null : json["Token"],
-        user: _user
+        identityAuth: json["IdentityAuth"],
+        token: json["Token"],
+        identity: Identity.fromJson(json["Identity"]),
       );
 
   Map<String, dynamic> toJson() => {
-        "IdentityAuth": identityAuth == null ? null : identityAuth,
-        "Token": token == null ? null : token,
-        "user": user
+        "IdentityAuth": identityAuth,
+        "Token": token,
+        "Identity": identity.toJson(),
+      };
+}
+
+class Identity {
+  Identity({
+    this.result,
+    this.empId,
+    this.username,
+    this.firstName,
+    this.lastName,
+    this.company,
+  });
+
+  bool result;
+  String empId;
+  String username;
+  String firstName;
+  String lastName;
+  String company;
+
+  factory Identity.fromJson(Map<String, dynamic> json) => Identity(
+        result: json["RESULT"],
+        empId: json["EMP_ID"],
+        username: json["USERNAME"],
+        firstName: json["FIRST_NAME"],
+        lastName: json["LAST_NAME"],
+        company: json["COMPANY"],
+      );
+
+  Map<String, dynamic> toJson() => {
+        "RESULT": result,
+        "EMP_ID": empId,
+        "USERNAME": username,
+        "FIRST_NAME": firstName,
+        "LAST_NAME": lastName,
+        "COMPANY": company,
       };
 }

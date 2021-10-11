@@ -252,13 +252,10 @@ class _CheckinPageState extends State<CheckinPage> {
   }
 
   String _formatDateTime(DateTime dateTime) {
-    // return DateFormat('MM/dd/yyyy hh:mm:ss').format(dateTime);
-    var formatter = DateFormat.yMMMMEEEEd();
-    var time = dateTime.hour.toString() +
-        ":" +
-        dateTime.minute.toString() +
-        ":" +
-        dateTime.second.toString();
-    return formatter.format(dateTime) + " " + time;
+    // var formatterDate = DateFormat.yMMMMEEEEd('en_US');
+    // var formatterTime = DateFormat.Hms('en_US');
+    // return "${formatterDate.format(dateTime)} ${formatterTime.format(dateTime)}";
+
+    return DateFormat('EEEE, dd MMMM yyyy HH:mm:ss', 'en_US').format(dateTime);
   }
 }

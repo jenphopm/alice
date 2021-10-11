@@ -1,4 +1,3 @@
-
 import 'package:alice/pages/main_page.dart';
 import 'package:alice/result/user_login_result.dart';
 import 'package:flutter/material.dart';

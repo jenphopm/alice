@@ -27,7 +27,7 @@ class _CheckinHistoryPageState extends State<CheckinHistoryPage> {
         'https://alice-api-service-dev.gb2bnm5p3ohuo.ap-southeast-1.cs.amazonlightsail.com/Service/HistoryCheckIn');
     var response =
         await http.post(url, body: {'Token': widget.loginData.token});
-    ;
+    
     print(response.body);
 
     var result = checkinHistoryResultFromJson(response.body);

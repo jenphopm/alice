@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "580864734767",
+    "project_id": "alice-firebase",
+    "storage_bucket": "alice-firebase.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:580864734767:android:975729e9929b59050078da",
+        "android_client_info": {
+          "package_name": "com.example.alice"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "580864734767-nsliro2lbtu7nl7dblct0usq1ht5cm6q.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC5B_gLOTeT-l7XAhcG3nmB8eWZEMcblms"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "580864734767-nsliro2lbtu7nl7dblct0usq1ht5cm6q.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

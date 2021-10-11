@@ -87,17 +87,20 @@ class _HomePageState extends State<HomePage> {
                     MenuBox(
                         name: "Check in",
                         icon: Icons.access_time_outlined,
-                        function: MainCheckinPage(loginData: widget.loginData)),
+                        function: MainCheckinPage(
+                            loginData: widget.loginData, imagePath: '')),
                   if (listCodeMenu.contains("Leave") == true)
                     MenuBox(
                         name: "Leave",
                         icon: Icons.calendar_today,
-                        function: MainCheckinPage(loginData: widget.loginData)),
+                        function: MainCheckinPage(
+                            loginData: widget.loginData, imagePath: '')),
                   if (listCodeMenu.contains("PaySlip") == true)
                     MenuBox(
                         name: "PaySlip",
                         icon: Icons.money,
-                        function: MainCheckinPage(loginData: widget.loginData)),
+                        function: MainCheckinPage(
+                            loginData: widget.loginData, imagePath: '')),
                 ],
               );
             }

@@ -5,8 +5,9 @@ import 'package:flutter/material.dart';
 
 class MainCheckinPage extends StatefulWidget {
   final UserLoginResult loginData;
+  final String imagePath;
 
-  const MainCheckinPage({Key key, this.loginData}) : super(key: key);
+  const MainCheckinPage({Key key, this.loginData, this.imagePath}) : super(key: key);
 
   @override
   _MainCheckinPageState createState() => _MainCheckinPageState();
@@ -20,7 +21,7 @@ class _MainCheckinPageState extends State<MainCheckinPage> {
         child: Scaffold(
           body: TabBarView(
             children: [
-              CheckinPage(loginData: widget.loginData),
+              CheckinPage(loginData: widget.loginData, imagePath: widget.imagePath),
               CheckinHistoryPage(loginData: widget.loginData),
             ],
           ),

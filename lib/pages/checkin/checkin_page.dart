@@ -1,7 +1,15 @@
 import 'dart:async';
+import 'dart:io';
 
+import 'package:alice/pages/checkin/camera/camera_review.dart';
+import 'package:alice/pages/checkin/main_checkin_page.dart';
+import 'package:alice/pages/checkin/widgets/contains_picture.dart';
 import 'package:alice/result/user_login_result.dart';
+import 'package:alice/services/connectivity.dart';
+import 'package:firebase_storage/firebase_storage.dart';
+
 import 'package:flutter/material.dart';
+
 import 'package:intl/intl.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
@@ -9,7 +17,9 @@ import 'package:http/http.dart' as http;
 
 class CheckinPage extends StatefulWidget {
   final UserLoginResult loginData;
-  const CheckinPage({Key key, this.loginData}) : super(key: key);
+  final String imagePath;
+  const CheckinPage({Key key, this.loginData, this.imagePath})
+      : super(key: key);
 
   @override
   _CheckinPageState createState() => _CheckinPageState();
@@ -20,20 +30,23 @@ class _CheckinPageState extends State<CheckinPage> {
   var longS = "";
   var latS = "";
   var address = "";
+  String network = "";
   Placemark place;
+  Network ipdevice;
 
   @override
   void initState() {
     _timeString = _formatDateTime(DateTime.now());
     Timer.periodic(Duration(seconds: 1), (Timer t) => _getTime());
     super.initState();
-
     getLocation();
   }
 
   void getLocation() async {
     Position position = await _getGeoLocationPosition();
-    GetAddressFromLatLong(position);
+    getAddressFromLatLong(position);
+    network = await verifyNetwork();
+    ipdevice = await ipNetwork();
   }
 
   Future<Position> _getGeoLocationPosition() async {
@@ -71,7 +84,7 @@ class _CheckinPageState extends State<CheckinPage> {
         desiredAccuracy: LocationAccuracy.high);
   }
 
-  Future<void> GetAddressFromLatLong(Position position) async {
+  Future<void> getAddressFromLatLong(Position position) async {
     List<Placemark> placemarks = await placemarkFromCoordinates(
         position.latitude, position.longitude,
         localeIdentifier: "th_TH");
@@ -90,6 +103,7 @@ class _CheckinPageState extends State<CheckinPage> {
   }
 
   Future<void> saveAddress() async {
+    String photoref = await uploadToStorageThread();
     var response = await http.post(
         Uri.parse(
             'https://alice-api-service-dev.gb2bnm5p3ohuo.ap-southeast-1.cs.amazonlightsail.com/Service/CheckIn'),
@@ -100,11 +114,36 @@ class _CheckinPageState extends State<CheckinPage> {
           'administrativeArea': place.administrativeArea,
           'country': place.country,
           'postalCode': place.postalCode,
-          'Token': widget.loginData.token
+          'Token': widget.loginData.token,
+          'Ref_Photo': photoref,
+          'ip4': ipdevice.ip4,
+          'host': ipdevice.host,
+          'network': network
         });
     print('response ${response.body}');
 
     return response.body;
+  }
+
+  Future<String> uploadToStorageThread() async {
+    FirebaseStorage storage = FirebaseStorage.instance;
+
+    // String fileName;
+    File imageFile = File(widget.imagePath);
+
+    final DateTime dateTime = DateTime.now();
+    var formatter = DateFormat('ddMMyyyyhhmma');
+    var fileName = formatter.format(dateTime);
+
+    print(widget.loginData.user + '/' + fileName + '.jpg');
+
+    // Uploading the selected image with some custom meta data
+    await storage
+        .ref()
+        .child(widget.loginData.user + '/' + fileName + '.jpg')
+        .putFile(imageFile);
+
+    return widget.loginData.user + '/' + fileName + '.jpg';
   }
 
   @override
@@ -148,6 +187,9 @@ class _CheckinPageState extends State<CheckinPage> {
                 ),
               ),
             ),
+            widget.imagePath.isNotEmpty
+                ? ContainsPicture(height: 475, imagePath: widget.imagePath)
+                : Container(),
             Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: SizedBox(
@@ -155,9 +197,36 @@ class _CheckinPageState extends State<CheckinPage> {
                     child: ElevatedButton(
                         child: Text('CHECK IN NOW'),
                         onPressed: () async {
-                          // Position position = await _getGeoLocationPosition();
-                          // GetAddressFromLatLong(position);
-                          saveAddress();
+                          if (widget.imagePath.isEmpty) {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (BuildContext context) =>
+                                        TakePictureScreen(
+                                            loginData: widget.loginData)));
+                          } else {
+                            saveAddress();
+
+                            showDialog(
+                              context: context,
+                              builder: (context) => AlertDialog(
+                                  title: const Text('Success'),
+                                  content: const Text('Check in success'),
+                                  actions: <Widget>[
+                                    TextButton(
+                                      onPressed: () => Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (BuildContext context) =>
+                                                  MainCheckinPage(
+                                                      loginData:
+                                                          widget.loginData,
+                                                      imagePath: ''))),
+                                      child: const Text('OK'),
+                                    ),
+                                  ]),
+                            );
+                          }
                         }))),
             // Expanded(child: SizedBox()),
             // Padding(

@@ -30,10 +30,12 @@ class _LoginPageState extends State<LoginPage> {
     print("response ${response.body}");
 
     // var result = response.body;
-    var result = userLoginResultFromJson(response.body);
+    var result = userLoginResultFromJson(response.body, _username.text);
     // setState(() {
     //   _dataFromLogin = userLoginResultFromJson(result);
     // });
+
+    print(result);
 
     if (result.identityAuth == true) {
       Navigator.push(

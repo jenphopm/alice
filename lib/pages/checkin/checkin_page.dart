@@ -1,10 +1,15 @@
 import 'dart:async';
+import 'dart:io';
+
 
 import 'package:alice/pages/checkin/camera/camera_review.dart';
 import 'package:alice/pages/checkin/main_checkin_page.dart';
 import 'package:alice/pages/checkin/widgets/contains_picture.dart';
 import 'package:alice/result/user_login_result.dart';
+import 'package:firebase_storage/firebase_storage.dart';
+
 import 'package:flutter/material.dart';
+
 import 'package:intl/intl.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
@@ -95,6 +100,7 @@ class _CheckinPageState extends State<CheckinPage> {
   }
 
   Future<void> saveAddress() async {
+    String photo_ref = await uploadToStorageThread();
     var response = await http.post(
         Uri.parse(
             'https://alice-api-service-dev.gb2bnm5p3ohuo.ap-southeast-1.cs.amazonlightsail.com/Service/CheckIn'),
@@ -105,11 +111,31 @@ class _CheckinPageState extends State<CheckinPage> {
           'administrativeArea': place.administrativeArea,
           'country': place.country,
           'postalCode': place.postalCode,
-          'Token': widget.loginData.token
+          'Token': widget.loginData.token,
+          'Ref_Photo': photo_ref
         });
     print('response ${response.body}');
 
     return response.body;
+  }
+
+  Future<String> uploadToStorageThread() async {
+    FirebaseStorage storage = FirebaseStorage.instance;
+
+    // String fileName;
+    File imageFile = File(widget.imagePath);
+
+    final DateTime dateTime = DateTime.now();
+    var formatter = DateFormat('ddMMyyyyhhmma');
+    var fileName = formatter.format(dateTime);
+
+    print(widget.loginData.user + '/' + fileName + '.jpg');
+
+    
+    // Uploading the selected image with some custom meta data
+    await storage.ref().child(widget.loginData.user + '/' + fileName + '.jpg').putFile(imageFile);
+
+    return widget.loginData.user + '/' + fileName + '.jpg';
   }
 
   @override
@@ -180,12 +206,14 @@ class _CheckinPageState extends State<CheckinPage> {
                                   content: const Text('Check in success'),
                                   actions: <Widget>[
                                     TextButton(
-                                      onPressed: () =>
-                                          Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (BuildContext context) =>
-                                        MainCheckinPage(loginData: widget.loginData, imagePath: ''))),
+                                      onPressed: () => Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (BuildContext context) =>
+                                                  MainCheckinPage(
+                                                      loginData:
+                                                          widget.loginData,
+                                                      imagePath: ''))),
                                       child: const Text('OK'),
                                     ),
                                   ]),

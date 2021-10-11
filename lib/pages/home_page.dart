@@ -32,7 +32,7 @@ class _HomePageState extends State<HomePage> {
         'https://alice-api-service-dev.gb2bnm5p3ohuo.ap-southeast-1.cs.amazonlightsail.com/Service/GetMainMenu');
     var response =
         await http.post(url, body: {'Token': widget.loginData.token});
-    ;
+    
     print(response.body);
 
     var result = menuResultFromJson(response.body);

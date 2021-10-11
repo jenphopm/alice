@@ -43,30 +43,6 @@ class _CheckinHistoryPageState extends State<CheckinHistoryPage> {
       appBar: AppBar(
         title: Text('CHECK IN HISTORY'),
       ),
-      // body: FutureBuilder(
-      //   future: getData(),
-      //   builder: (BuildContext context,
-      //       AsyncSnapshot<CheckinHistoryResult> snapshot) {
-      //     if (snapshot.connectionState == ConnectionState.done) {
-      //       var result = snapshot.data.response;
-      //       return Padding(
-      //         padding: const EdgeInsets.all(8.0),
-      //         child: Column(
-      //           children: [
-      //             StatBox(
-      //               title: 'ผู้ติดเชื้อสะสม',
-      //               text: 'test',
-      //               backgroundColor: Color(0xff77007C),
-      //             ),
-      //           ],
-      //         ),
-      //       );
-      //     }
-
-      //     return LinearProgressIndicator();
-      //   },
-      // ),
-
       body: FutureBuilder(
         builder: (BuildContext context,
             AsyncSnapshot<CheckinHistoryResult> snapshot) {
@@ -83,7 +59,6 @@ class _CheckinHistoryPageState extends State<CheckinHistoryPage> {
                         title: dataCheckin.timeStamp,
                         text:
                             "${dataCheckin.subLocality}, ${dataCheckin.locality}, ${dataCheckin.province}, ${dataCheckin.country}, ${dataCheckin.postalCode} ",
-                        backgroundColor: Color(0xff87CEEB),
                       ),
                     ),
                   ],

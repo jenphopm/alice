@@ -48,7 +48,10 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Alice Login')),
+      appBar: AppBar(
+        title: Text('Alice Login'),
+        backgroundColor: Color(0xff9ed8c1),
+      ),
       body: Form(
           child: Column(
         children: [
@@ -75,6 +78,9 @@ class _LoginPageState extends State<LoginPage> {
                 width: double.maxFinite,
                 child: ElevatedButton(
                     child: Text('Login'),
+                    style: ButtonStyle(
+                        backgroundColor:
+                            MaterialStateProperty.all(Color(0xff9ed8c1))),
                     onPressed: () {
                       login();
                     })),

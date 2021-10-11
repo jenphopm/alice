@@ -25,7 +25,7 @@ class _MainPageState extends State<MainPage> {
               ),
             ],
           ),
-          backgroundColor: Colors.blue,
+          backgroundColor: Color(0xff9ed8c1),
           bottomNavigationBar: TabBar(
             tabs: [
               Tab(

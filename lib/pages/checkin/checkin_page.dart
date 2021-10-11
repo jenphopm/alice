@@ -1,5 +1,8 @@
 import 'dart:async';
 
+import 'package:alice/pages/checkin/camera/camera_review.dart';
+import 'package:alice/pages/checkin/main_checkin_page.dart';
+import 'package:alice/pages/checkin/widgets/contains_picture.dart';
 import 'package:alice/user_login_result.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -9,7 +12,9 @@ import 'package:http/http.dart' as http;
 
 class CheckinPage extends StatefulWidget {
   final UserLoginResult loginData;
-  const CheckinPage({Key key, this.loginData}) : super(key: key);
+  final String imagePath;
+  const CheckinPage({Key key, this.loginData, this.imagePath})
+      : super(key: key);
 
   @override
   _CheckinPageState createState() => _CheckinPageState();
@@ -33,7 +38,7 @@ class _CheckinPageState extends State<CheckinPage> {
 
   void getLocation() async {
     Position position = await _getGeoLocationPosition();
-    GetAddressFromLatLong(position);
+    getAddressFromLatLong(position);
   }
 
   Future<Position> _getGeoLocationPosition() async {
@@ -71,7 +76,7 @@ class _CheckinPageState extends State<CheckinPage> {
         desiredAccuracy: LocationAccuracy.high);
   }
 
-  Future<void> GetAddressFromLatLong(Position position) async {
+  Future<void> getAddressFromLatLong(Position position) async {
     List<Placemark> placemarks = await placemarkFromCoordinates(
         position.latitude, position.longitude,
         localeIdentifier: "th_TH");
@@ -148,6 +153,9 @@ class _CheckinPageState extends State<CheckinPage> {
                 ),
               ),
             ),
+            widget.imagePath.isNotEmpty ?
+            ContainsPicture(height: 475, imagePath: widget.imagePath)
+            :Container(),
             Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: SizedBox(
@@ -155,9 +163,21 @@ class _CheckinPageState extends State<CheckinPage> {
                     child: ElevatedButton(
                         child: Text('CHECK IN NOW'),
                         onPressed: () async {
-                          // Position position = await _getGeoLocationPosition();
-                          // GetAddressFromLatLong(position);
-                          saveAddress();
+                          if (widget.imagePath.isEmpty) {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (BuildContext context) =>
+                                        TakePictureScreen(
+                                            loginData: widget.loginData)));
+                          } else {
+                            saveAddress();
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (BuildContext context) =>
+                                        MainCheckinPage(loginData: widget.loginData, imagePath: '')));
+                          }
                         }))),
             // Expanded(child: SizedBox()),
             // Padding(

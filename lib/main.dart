@@ -1,7 +1,12 @@
 import 'package:alice/pages/login_page.dart';
+import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 
-void main() {
+List<CameraDescription> cameras = [];
+
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  cameras = await availableCameras();
   runApp(MyApp());
 }
 

@@ -46,7 +46,7 @@ class _HomePageState extends State<HomePage> {
                           MaterialPageRoute(
                               builder: (BuildContext context) =>
                                   MainCheckinPage(
-                                      loginData: widget.loginData)));
+                                      loginData: widget.loginData, imagePath: '')));
                     })),
           )
         ],

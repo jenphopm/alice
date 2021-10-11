@@ -5,18 +5,6 @@ class contains_tab_controller extends StatelessWidget {
   contains_tab_controller({this.result});
   contains_tab_bar result;
 
-  tabMaker() {
-    List<Tab> tabs = [];
-    ;
-    for (var i = 0; i < result.tab.length; i++) {
-      tabs.add(Tab(
-        icon: result.tab[i].icon,
-        text: result.tab[i].text,
-      ));
-    }
-    return tabs;
-  }
-
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(

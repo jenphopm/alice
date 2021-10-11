@@ -20,26 +20,21 @@ class _MainCheckinPageState extends State<MainCheckinPage> {
   Widget build(BuildContext context) {
     contains_tab_bar resultTab;
 
-    List<Widget> wid = [];
-    List<Tab> tab = [];
-
-    Widget t1 = CheckinPage(loginData: widget.loginData, imagePath: widget.imagePath);
-    Widget t2 = CheckinHistoryPage(loginData: widget.loginData);
-
-    wid.add(t1);
-
-
-    wid.add(t2);
-
-    tab.add(Tab(
-      icon: Icon(Icons.access_time_outlined),
-      text: 'CHECK IN',
-    ));
-
-    tab.add(Tab(
-      icon: Icon(Icons.history),
-      text: 'CHECK IN HISTORY',
-    ));
+    List<Widget> wid = [
+      CheckinPage(loginData: widget.loginData, imagePath: widget.imagePath),
+      CheckinHistoryPage(loginData: widget.loginData)
+    ];
+    
+    List<Tab> tab = [
+      Tab(
+        icon: Icon(Icons.access_time_outlined),
+        text: 'CHECK IN',
+      ),
+      Tab(
+        icon: Icon(Icons.history),
+        text: 'CHECK IN HISTORY',
+      )
+    ];
 
     resultTab = contains_tab_bar.set(wid, tab, Color(0xff9ed8c1), 2);
 

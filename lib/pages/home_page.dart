@@ -84,10 +84,26 @@ class _HomePageState extends State<HomePage> {
                       child: Text('รูป'),
                       width: 100,
                     ),
-                    SizedBox(
-                      child: Text(
-                          '${widget.loginData.identity.empId}  ${widget.loginData.identity.firstName}  ${widget.loginData.identity.lastName}'),
-                      width: 200,
+                    Column(
+                      children: [
+                        SizedBox(
+                          height: 60,
+                        ),
+                        SizedBox(
+                          child: Center(
+                            child: Text(
+                                '${widget.loginData.identity.firstName}  ${widget.loginData.identity.lastName}'),
+                          ),
+                        ),
+                        SizedBox(
+                          height: 5,
+                        ),
+                        SizedBox(
+                          child: Center(
+                              child:
+                                  Text('(${widget.loginData.identity.empId})')),
+                        )
+                      ],
                     ),
                   ],
                 ),

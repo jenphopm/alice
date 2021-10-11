@@ -1,6 +1,6 @@
 import 'package:alice/pages/checkin/checkin_history_page.dart';
 import 'package:alice/pages/checkin/checkin_page.dart';
-import 'package:alice/user_login_result.dart';
+import 'package:alice/result/user_login_result.dart';
 import 'package:flutter/material.dart';
 
 class MainCheckinPage extends StatefulWidget {

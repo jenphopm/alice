@@ -1,6 +1,7 @@
 import 'package:alice/pages/checkin/main_checkin_page.dart';
 import 'package:alice/pages/checkin/widgets/contains_picture.dart';
-import 'package:alice/user_login_result.dart';
+import 'package:alice/result/user_login_result.dart';
+
 import 'package:flutter/material.dart';
 
 class DisplayPictureScreen extends StatelessWidget {

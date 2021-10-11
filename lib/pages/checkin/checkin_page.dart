@@ -153,9 +153,9 @@ class _CheckinPageState extends State<CheckinPage> {
                 ),
               ),
             ),
-            widget.imagePath.isNotEmpty ?
-            ContainsPicture(height: 475, imagePath: widget.imagePath)
-            :Container(),
+            widget.imagePath.isNotEmpty
+                ? ContainsPicture(height: 475, imagePath: widget.imagePath)
+                : Container(),
             Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: SizedBox(
@@ -172,11 +172,24 @@ class _CheckinPageState extends State<CheckinPage> {
                                             loginData: widget.loginData)));
                           } else {
                             saveAddress();
-                            Navigator.push(
+
+                            showDialog(
+                              context: context,
+                              builder: (context) => AlertDialog(
+                                  title: const Text('Success'),
+                                  content: const Text('Check in success'),
+                                  actions: <Widget>[
+                                    TextButton(
+                                      onPressed: () =>
+                                          Navigator.push(
                                 context,
                                 MaterialPageRoute(
                                     builder: (BuildContext context) =>
-                                        MainCheckinPage(loginData: widget.loginData, imagePath: '')));
+                                        MainCheckinPage(loginData: widget.loginData, imagePath: ''))),
+                                      child: const Text('OK'),
+                                    ),
+                                  ]),
+                            );
                           }
                         }))),
             // Expanded(child: SizedBox()),

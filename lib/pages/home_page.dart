@@ -2,6 +2,7 @@ import 'package:alice/menu_box.dart';
 import 'package:alice/pages/login_page.dart';
 import 'package:alice/result/menu_result.dart';
 import 'package:alice/result/user_login_result.dart';
+import 'package:alice/services/firebase_service.dart';
 import 'package:flutter/material.dart';
 
 import 'checkin/main_checkin_page.dart';
@@ -26,6 +27,11 @@ class _HomePageState extends State<HomePage> {
     getMenuData();
   }
 
+  String urlphoto;
+  Future<void> getPhoto() async {
+    urlphoto = await loadToStorageThread(widget.loginData.identity.username);
+  }
+
   Future<MenuResult> getMenuData() async {
     print('get menu data');
     var url = Uri.parse(
@@ -47,6 +53,7 @@ class _HomePageState extends State<HomePage> {
   void getPhone() async {
     DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
     AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
+
     print('Running on ${androidInfo.model}');
   }
 
@@ -77,37 +84,84 @@ class _HomePageState extends State<HomePage> {
         body: Column(
           children: [
             SizedBox(
-                child: Row(
-                  children: [
-                    SizedBox(
-                      width: 50,
-                    ),
-                    SizedBox(
-                      child: Text('รูป'),
-                      width: 100,
-                    ),
-                    Column(
-                      children: [
-                        SizedBox(
-                          height: 60,
-                        ),
-                        SizedBox(
-                          child: Center(
-                            child: Text(
-                                '${widget.loginData.identity.firstName}  ${widget.loginData.identity.lastName}'),
+                child: FutureBuilder(
+                  builder:
+                      (BuildContext context, AsyncSnapshot<void> snapshot) {
+                    if (snapshot.connectionState == ConnectionState.done) {
+                      return Row(
+                        children: <Widget>[
+                          Expanded(
+                            flex: 1,
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: SizedBox(
+                                width: 100,
+                                child: Image.network(
+                                  urlphoto,
+                                  height: 100,
+                                  width: 100,
+                                  fit: BoxFit.fitWidth,
+                                ),
+                              ),
+                            ),
                           ),
-                        ),
-                        SizedBox(
-                          height: 5,
-                        ),
-                        SizedBox(
-                          child: Center(
-                              child:
-                                  Text('(${widget.loginData.identity.empId})')),
-                        )
-                      ],
-                    ),
-                  ],
+                          Expanded(
+                            flex: 3,
+                            child: ListView(
+                              padding: const EdgeInsets.all(25.0),
+                              children: [
+                                SizedBox(
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Text('Employee ID : ' + '${widget.loginData.identity.empId}'),
+                                  ),
+                                ),
+                                SizedBox(
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Text('Name : ' + '${widget.loginData.identity.firstName} ${widget.loginData.identity.lastName}'),
+                                  ),
+                                ),SizedBox(                                  
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Text('Company : ' + '${widget.loginData.identity.company}'),
+                                  ),
+                                ),
+                              ],
+
+                            )
+                          ),
+                        ],
+                        // children: [
+                        //   Padding(
+                        //     padding: const EdgeInsets.all(8.0),
+                        //     child: SizedBox(
+                        //       width: 100,
+                        //       child: Image.network(
+                        //         urlphoto,
+                        //         height: 100,
+                        //         width: 100,
+                        //         fit: BoxFit.fitWidth,
+                        //       ),
+                        //     ),
+                        //   ),
+                        //   SizedBox(
+                        //     height: 20,
+                        //     child: Container(
+                        //       width: 285,
+                        //       color: Colors.blue,
+                        //       height: 100,
+                        //     ),
+                        //     // child: Text(
+                        //     //     '${widget.loginData.identity.empId}  ${widget.loginData.identity.firstName}  ${widget.loginData.identity.lastName}'),
+                        //     // width: 200,
+                        //   ),
+                        // ],
+                      );
+                    }
+                    return LinearProgressIndicator();
+                  },
+                  future: getPhoto(),
                 ),
                 height: 150),
             Expanded(

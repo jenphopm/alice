@@ -1,12 +1,11 @@
 import 'dart:async';
-import 'dart:io';
 
 import 'package:alice/pages/checkin/camera/camera_review.dart';
 import 'package:alice/pages/checkin/main_checkin_page.dart';
 import 'package:alice/pages/checkin/widgets/contains_picture.dart';
 import 'package:alice/result/user_login_result.dart';
 import 'package:alice/services/connectivity.dart';
-import 'package:firebase_storage/firebase_storage.dart';
+import 'package:alice/services/firebase_service.dart';
 
 import 'package:flutter/material.dart';
 
@@ -103,7 +102,7 @@ class _CheckinPageState extends State<CheckinPage> {
   }
 
   Future<void> saveAddress() async {
-    String photoref = await uploadToStorageThread();
+    String photoref = await uploadToStorageThread(widget.imagePath, widget.loginData.identity.username);
     var response = await http.post(
         Uri.parse(
             'https://alice-api-service-dev.gb2bnm5p3ohuo.ap-southeast-1.cs.amazonlightsail.com/Service/CheckIn'),
@@ -123,27 +122,6 @@ class _CheckinPageState extends State<CheckinPage> {
     print('response ${response.body}');
 
     return response.body;
-  }
-
-  Future<String> uploadToStorageThread() async {
-    FirebaseStorage storage = FirebaseStorage.instance;
-
-    // String fileName;
-    File imageFile = File(widget.imagePath);
-
-    final DateTime dateTime = DateTime.now();
-    var formatter = DateFormat('ddMMyyyyhhmma');
-    var fileName = formatter.format(dateTime);
-
-    print(widget.loginData.identity.username + '/' + fileName + '.jpg');
-
-    // Uploading the selected image with some custom meta data
-    await storage
-        .ref()
-        .child(widget.loginData.identity.username + '/' + fileName + '.jpg')
-        .putFile(imageFile);
-
-    return widget.loginData.identity.username + '/' + fileName + '.jpg';
   }
 
   @override

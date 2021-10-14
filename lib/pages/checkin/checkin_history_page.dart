@@ -51,14 +51,27 @@ class _CheckinHistoryPageState extends State<CheckinHistoryPage> {
             provider.getHistoryData(widget.loginData.token);
           }
 
+          List dateData = [];
+          provider.checkinHisList.forEach((element) {
+            dateData.add(element.date);
+          });
+          dateData = dateData.toSet().toList();
+
           return ListView.builder(
-            itemCount: provider.checkinHisList.length,
+            itemCount: dateData.length ?? 0,
             itemBuilder: (context, int index) {
-              Response data = provider.checkinHisList[index];
-              return Container(
-                child: Text(
-                  data.username
-                ),
+              // Response data = provider.checkinHisList[index];
+              // return Container(
+              //   child: Text(data.username),
+              // );
+              List<Response> dataHistoryDate = [];
+              provider.checkinHisList.forEach((element) => {
+                    if (dateData[index] == element.date)
+                      {dataHistoryDate.add(element)}
+                  });
+              return Padding(
+                padding: const EdgeInsets.fromLTRB(15, 10, 15, 10),
+                child: TimelineDateBox(dateData[index], dataHistoryDate),
               );
             },
           );

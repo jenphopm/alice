@@ -1,6 +1,7 @@
 import 'package:alice/result/checkin_history_result.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 
 class UserDemo with ChangeNotifier {
   String username;
@@ -27,6 +28,21 @@ class UserDemo with ChangeNotifier {
 
 class CheckinHistory with ChangeNotifier {
   List<Response> checkinHisList = [];
+
+  void getHistoryData(token) async {
+    print('get data');
+    var url = Uri.parse(
+        'https://alice-api-service-dev.gb2bnm5p3ohuo.ap-southeast-1.cs.amazonlightsail.com/Service/HistoryCheckIn');
+    var response = await http.post(url, body: {'Token': token});
+
+    print(response.body);
+
+    var result = checkinHistoryResultFromJson(response.body);
+
+    print("result " + result.response.toString());
+    checkinHisList = result.response;
+    // return checkinHisList.length;
+  }
 
   List<Response> getCheckinHisList() {
     return checkinHisList;

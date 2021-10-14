@@ -32,6 +32,7 @@ class _CheckinPageState extends State<CheckinPage> {
   FaceNetService _faceNetService = FaceNetService();
   MLKitService _mlKitService = MLKitService();
   DataBaseService _dataBaseService = DataBaseService();
+  Timer _timer;
 
   CameraDescription cameraDescription;
 
@@ -48,10 +49,16 @@ class _CheckinPageState extends State<CheckinPage> {
   @override
   void initState() {
     _timeString = _formatDateTime(DateTime.now());
-    Timer.periodic(Duration(seconds: 1), (Timer t) => _getTime());
+    _timer = Timer.periodic(Duration(seconds: 1), (Timer t) => _getTime());
     super.initState();
     getLocation();
     _startUp();
+  }
+
+  @override
+  void dispose() {
+    _timer.cancel();
+    super.dispose();
   }
 
   _startUp() async {
@@ -221,7 +228,8 @@ class _CheckinPageState extends State<CheckinPage> {
                                     builder: (BuildContext context) =>
                                         TakePictureScreen(
                                             loginData: widget.loginData,
-                                            cameraDescription: cameraDescription)));
+                                            cameraDescription:
+                                                cameraDescription)));
                           } else {
                             saveAddress();
 

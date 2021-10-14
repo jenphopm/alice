@@ -1,10 +1,8 @@
 import 'package:alice/result/checkin_history_result.dart';
-import 'package:alice/stat_box.dart';
 import 'package:alice/result/user_login_result.dart';
 import 'package:alice/timeline_date_box.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:timeline_tile/timeline_tile.dart';
 
 class CheckinHistoryPage extends StatefulWidget {
   final UserLoginResult loginData;

@@ -4,6 +4,7 @@ import 'dart:math' as math;
 import 'package:alice/pages/widgets/face_painter.dart';
 import 'package:alice/pages/widgets/auth_action_button.dart';
 import 'package:alice/pages/widgets/camera_header.dart';
+import 'package:alice/result/user_login_result.dart';
 import 'package:alice/services/camera_service.dart';
 import 'package:alice/services/facenet_service.dart';
 import 'package:alice/services/ml_kit_service.dart';
@@ -13,8 +14,8 @@ import 'package:flutter/material.dart';
 
 class SignUp extends StatefulWidget {
   final CameraDescription cameraDescription;
-
-  const SignUp({Key key, @required this.cameraDescription}) : super(key: key);
+  final UserLoginResult loginData;
+  const SignUp({Key key, @required this.cameraDescription, @required this.loginData}) : super(key: key);
 
   @override
   SignUpState createState() => SignUpState();
@@ -225,6 +226,7 @@ class SignUpState extends State<SignUp> {
                 onPressed: onShot,
                 isLogin: false,
                 reload: _reload,
+                loginData: widget.loginData,
               )
             : Container());
   }

@@ -1,12 +1,14 @@
 import 'package:alice/database/database.dart';
 import 'package:alice/face_auth/sign_up.dart';
+import 'package:alice/result/user_login_result.dart';
 import 'package:alice/services/facenet_service.dart';
 import 'package:alice/services/ml_kit_service.dart';
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 
 class AdminPage extends StatefulWidget {
-  const AdminPage({Key key}) : super(key: key);
+  final UserLoginResult loginData;
+  const AdminPage({Key key, this.loginData}) : super(key: key);
 
   @override
   AdminPageState createState() => AdminPageState();
@@ -103,6 +105,7 @@ class AdminPageState extends State<AdminPage> {
                               MaterialPageRoute(
                                 builder: (BuildContext context) => SignUp(
                                   cameraDescription: cameraDescription,
+                                  loginData: widget.loginData,
                                 ),
                               ),
                             );

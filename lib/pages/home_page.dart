@@ -212,7 +212,7 @@ class _HomePageState extends State<HomePage> {
                           MenuBox(
                               name: "Scan",
                               icon: Icons.face,
-                              function: AdminPage()),
+                              function: AdminPage(loginData: widget.loginData)),
                       ],
                     );
                   }

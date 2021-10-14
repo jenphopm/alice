@@ -1,5 +1,4 @@
 // import 'dart:io';
-import 'package:alice/app_text_field.dart';
 import 'package:alice/database/database.dart';
 import 'package:alice/pages/admin/home_page.dart';
 import 'package:alice/pages/checkin/main_checkin_page.dart';
@@ -36,8 +35,7 @@ class _AuthActionButtonState extends State<AuthActionButton> {
   final CameraService _cameraService = CameraService();
   final DataBaseService _dataBaseService = DataBaseService();
 
-  final TextEditingController _userTextEditingController =
-      TextEditingController(text: '');
+
 
   User predictedUser;
 
@@ -133,12 +131,11 @@ class _AuthActionButtonState extends State<AuthActionButton> {
         ));
       } else {
         return Container(
-            child: Column(children: [
-          AppTextField(
-            controller: _userTextEditingController,
-            labelText: "Username",
-          )
-        ]));
+          child: Text(
+          '${widget.loginData.identity.username}',
+          style: TextStyle(fontSize: 20),
+        )
+            );
       }
     }
   }
@@ -155,7 +152,7 @@ class _AuthActionButtonState extends State<AuthActionButton> {
   Future _signUp(context) async {
     /// gets predicted data from facenet service (user face detected)
     List predictedData = _faceNetService.predictedData;
-    String user = _userTextEditingController.text;
+    String user = widget.loginData.identity.username;
     String password = "x";
 
     /// creates a new user in the 'database'

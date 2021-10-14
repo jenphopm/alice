@@ -73,17 +73,19 @@ class _HomePageState extends State<HomePage> {
           backgroundColor: Color(0xff9ed8c1),
           automaticallyImplyLeading: false,
           actions: [
-            ElevatedButton(
-                child: Text('Logout'),
-                style: ButtonStyle(
-                    backgroundColor:
-                        MaterialStateProperty.all(Color(0xff9ed8c1))),
-                onPressed: () {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (BuildContext context) => LoginPage()));
-                })
+            Padding(
+              padding: const EdgeInsets.all(10.0),
+              child: ElevatedButton(
+                  child: Text('Logout'),
+                  style: ButtonStyle(
+                      backgroundColor: MaterialStateProperty.all(Colors.grey)),
+                  onPressed: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (BuildContext context) => LoginPage()));
+                  }),
+            )
           ],
         ),
         body: Column(

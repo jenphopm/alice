@@ -68,52 +68,70 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          title: Center(child: Text('Alice Login')),
-          backgroundColor: Color(0xff9ed8c1),
-          automaticallyImplyLeading: false,
-        ),
+        // appBar: AppBar(
+        //   title: Center(child: Text('Alice Login')),
+        //   backgroundColor: Color(0xff9ed8c1),
+        //   automaticallyImplyLeading: false,
+        // ),
         body: Consumer(builder: (context, UserDemo provider, Widget child) {
-          return Form(
-              child: Column(
-            children: [
-              SizedBox(
-                height: 50,
-              ),
-              Padding(
-                padding: EdgeInsets.fromLTRB(30, 15, 30, 15),
-                child: TextField(
-                    controller: _username,
-                    onChanged: provider.setUsername,
-                    autofocus: true,
-                    decoration: InputDecoration(
-                        border: OutlineInputBorder(), labelText: 'Username')),
-              ),
-              Padding(
-                padding: EdgeInsets.fromLTRB(30, 15, 30, 15),
-                child: TextField(
-                    controller: _password,
-                    onChanged: provider.setPassword,
-                    obscureText: true,
-                    decoration: InputDecoration(
-                        border: OutlineInputBorder(), labelText: 'Password')),
-              ),
-              Expanded(child: SizedBox()),
-              Padding(
-                padding: const EdgeInsets.fromLTRB(30, 15, 30, 15),
-                child: SizedBox(
-                    width: double.maxFinite,
-                    child: ElevatedButton(
-                        child: Text('Login'),
-                        style: ButtonStyle(
-                            backgroundColor:
-                                MaterialStateProperty.all(Color(0xff9ed8c1))),
-                        onPressed: () {
-                          login();
-                        })),
-              )
-            ],
-          ));
-        }));
+      return Form(
+          child: Column(
+        children: [
+          SizedBox(
+            height: 80,
+          ),
+          Center(
+              child: Text('Sign In',
+                  style: TextStyle(
+                      fontSize: 28,
+                      color: Colors.green,
+                      fontWeight: FontWeight.bold))),
+          SizedBox(
+            height: 30,
+          ),
+          Padding(
+            padding: EdgeInsets.fromLTRB(30, 15, 30, 15),
+            child: TextField(
+                controller: _username,
+                onChanged: provider.setUsername,
+                autofocus: true,
+                decoration: InputDecoration(
+                    border: OutlineInputBorder(), labelText: 'Username')),
+          ),
+          Padding(
+            padding: EdgeInsets.fromLTRB(30, 15, 30, 15),
+            child: TextField(
+                controller: _password,
+                onChanged: provider.setPassword,
+                obscureText: true,
+                decoration: InputDecoration(
+                    border: OutlineInputBorder(), labelText: 'Password')),
+          ),
+          // Expanded(child: SizedBox()),
+          SizedBox(
+            height: 30,
+          ),
+          Padding(
+            padding: const EdgeInsets.fromLTRB(30, 15, 30, 15),
+            child: SizedBox(
+                width: double.maxFinite,
+                child: ElevatedButton(
+                    child: Text('Login'),
+                    style: ButtonStyle(
+                        backgroundColor:
+                            MaterialStateProperty.all(Color(0xff9ed8c1)),
+                        shape:
+                            MaterialStateProperty.all<RoundedRectangleBorder>(
+                                RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(18.0),
+                          // side: BorderSide(color: Colors.red)
+                        ))),
+                    onPressed: () {
+                      login();
+                    })),
+          )
+        ],
+      ));
+    }));
   }
 }

@@ -52,7 +52,7 @@ class _CheckinPageState extends State<CheckinPage> {
     _timer = Timer.periodic(Duration(seconds: 1), (Timer t) => _getTime());
     super.initState();
     getLocation();
-    _startUp();
+    // _startUp();
   }
 
   @override
@@ -173,7 +173,7 @@ class _CheckinPageState extends State<CheckinPage> {
   @override
   Widget build(BuildContext context) {
     var locationResult;
-    // print("loginData " + widget.loginData.token);
+    print("loginData " + widget.loginData.token);
     if (longS == "" && latS == "") {
       locationResult = LinearProgressIndicator();
     } else {
@@ -222,6 +222,7 @@ class _CheckinPageState extends State<CheckinPage> {
                         child: Text('CHECK IN NOW'),
                         onPressed: () async {
                           if (widget.imagePath.isEmpty) {
+                            _startUp();
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(

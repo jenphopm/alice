@@ -1,10 +1,8 @@
-import 'package:alice/provider/model_data.dart';
 import 'package:alice/result/checkin_history_result.dart';
 import 'package:alice/result/user_login_result.dart';
 import 'package:alice/timeline_date_box.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:provider/provider.dart';
 
 class CheckinHistoryPage extends StatefulWidget {
   final UserLoginResult loginData;
@@ -20,7 +18,7 @@ class _CheckinHistoryPageState extends State<CheckinHistoryPage> {
     super.initState();
 
     print('init state');
-    // getHistoryData();
+    getHistoryData();
   }
 
   Future<CheckinHistoryResult> getHistoryData() async {
@@ -42,80 +40,75 @@ class _CheckinHistoryPageState extends State<CheckinHistoryPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          title: Text('CHECK IN HISTORY'),
-        ),
-        body: Consumer(
-          builder: (context, CheckinHistory provider, Widget child) =>
-              FutureBuilder(
-            builder: (BuildContext context,
-                AsyncSnapshot<CheckinHistoryResult> snapshot) {
-              if (snapshot.connectionState == ConnectionState.done) {
-                List<Response> dataHistory = snapshot.data.response;
-                List dateData = [];
-                dataHistory.forEach((element) {
-                  provider.setCheckinHisList(element);
-                  dateData.add(element.date);
-                });
-                dateData = dateData.toSet().toList();
-                // List<Response> dataTimelineDate = snapshot.data.response;
-                //         dataMenu.forEach(
-                //             (element) => listCodeMenu.add(element.codeMenu));
-                return Column(
-                  children: [
-                    SizedBox(
-                      height: 10,
-                    ),
-                    Expanded(
-                      child: ListView.builder(
-                        itemCount: dateData.length ?? 0,
-                        itemBuilder: (context, index) {
-                          List<Response> dataHistoryDate = [];
-                          dataHistory.forEach((element) => {
-                                if (dateData[index] == element.date)
-                                  {dataHistoryDate.add(element)}
-                              });
-                          // return Column(
-                          //   children: [
-                          //     Padding(
-                          //       padding: const EdgeInsets.all(8.0),
-                          //       child: StatBox(
-                          //         title: dataCheckin.timeStamp,
-                          //         text:
-                          //             "${dataCheckin.subLocality}, ${dataCheckin.locality}, ${dataCheckin.province}, ${dataCheckin.country}, ${dataCheckin.postalCode} ",
-                          //       ),
-                          //     ),
-                          //   ],
-                          // );
-                          return Padding(
-                            padding: const EdgeInsets.fromLTRB(15, 10, 15, 10),
-                            child: TimelineDateBox(
-                                dateData[index], dataHistoryDate),
-                          );
-                          // return TimelineTile(
-                          //   alignment: TimelineAlign.manual,
-                          //   lineXY: 0.2,
-                          //   // startChild: Text('startChild'),
-                          //   endChild: Padding(
-                          //     padding: const EdgeInsets.all(8.0),
-                          //     child: StatBox(
-                          //       title: dataCheckin.timeStamp,
-                          //       text:
-                          //           "${dataCheckin.subLocality}, ${dataCheckin.locality}, ${dataCheckin.province}, ${dataCheckin.country}, ${dataCheckin.postalCode} ",
-                          //     ),
-                          //   ),
-                          // );
-                        },
-                      ),
-                    ),
-                  ],
-                );
-              }
+      appBar: AppBar(
+        title: Text('CHECK IN HISTORY'),
+      ),
+      body: FutureBuilder(
+        builder: (BuildContext context,
+            AsyncSnapshot<CheckinHistoryResult> snapshot) {
+          if (snapshot.connectionState == ConnectionState.done) {
+            List<Response> dataHistory = snapshot.data.response;
+            List dateData = [];
+            dataHistory.forEach((element) => dateData.add(element.date));
+            dateData = dateData.toSet().toList();
+            // List<Response> dataTimelineDate = snapshot.data.response;
+            //         dataMenu.forEach(
+            //             (element) => listCodeMenu.add(element.codeMenu));
+            return Column(
+              children: [
+                SizedBox(
+                  height: 10,
+                ),
+                Expanded(
+                  child: ListView.builder(
+                    itemCount: dateData.length ?? 0,
+                    itemBuilder: (context, index) {
+                      List<Response> dataHistoryDate = [];
+                      dataHistory.forEach((element) => {
+                            if (dateData[index] == element.date)
+                              {dataHistoryDate.add(element)}
+                          });
+                      // return Column(
+                      //   children: [
+                      //     Padding(
+                      //       padding: const EdgeInsets.all(8.0),
+                      //       child: StatBox(
+                      //         title: dataCheckin.timeStamp,
+                      //         text:
+                      //             "${dataCheckin.subLocality}, ${dataCheckin.locality}, ${dataCheckin.province}, ${dataCheckin.country}, ${dataCheckin.postalCode} ",
+                      //       ),
+                      //     ),
+                      //   ],
+                      // );
+                      return Padding(
+                        padding: const EdgeInsets.fromLTRB(15, 10, 15, 10),
+                        child:
+                            TimelineDateBox(dateData[index], dataHistoryDate),
+                      );
+                      // return TimelineTile(
+                      //   alignment: TimelineAlign.manual,
+                      //   lineXY: 0.2,
+                      //   // startChild: Text('startChild'),
+                      //   endChild: Padding(
+                      //     padding: const EdgeInsets.all(8.0),
+                      //     child: StatBox(
+                      //       title: dataCheckin.timeStamp,
+                      //       text:
+                      //           "${dataCheckin.subLocality}, ${dataCheckin.locality}, ${dataCheckin.province}, ${dataCheckin.country}, ${dataCheckin.postalCode} ",
+                      //     ),
+                      //   ),
+                      // );
+                    },
+                  ),
+                ),
+              ],
+            );
+          }
 
-              return LinearProgressIndicator();
-            },
-            future: getHistoryData(),
-          ),
-        ));
+          return LinearProgressIndicator();
+        },
+        future: getHistoryData(),
+      ),
+    );
   }
 }

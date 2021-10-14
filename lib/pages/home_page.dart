@@ -1,9 +1,11 @@
 import 'package:alice/menu_box.dart';
+import 'package:alice/pages/admin/home_page.dart';
 import 'package:alice/pages/login_page.dart';
 import 'package:alice/result/menu_result.dart';
 import 'package:alice/result/user_login_result.dart';
 import 'package:alice/services/firebase_service.dart';
 import 'package:flutter/material.dart';
+import 'package:alice/database/database.dart';
 
 import 'checkin/main_checkin_page.dart';
 import 'package:device_info/device_info.dart';
@@ -28,12 +30,16 @@ class _HomePageState extends State<HomePage> {
   }
 
   String urlphoto;
+  bool addFace = false;
+
+  DataBaseService _dataBaseService = DataBaseService();
   Future<void> getPhoto() async {
     urlphoto = await loadToStorageThread(widget.loginData.identity.username);
   }
 
   Future<MenuResult> getMenuData() async {
     print('get menu data');
+    addFace = await _dataBaseService.checkDataFaceDetect(widget.loginData.identity.username);
     var url = Uri.parse(
         'https://alice-api-service-dev.gb2bnm5p3ohuo.ap-southeast-1.cs.amazonlightsail.com/Service/GetMainMenu');
     var response =
@@ -44,6 +50,7 @@ class _HomePageState extends State<HomePage> {
     var result = menuResultFromJson(response.body);
 
     print("result menu " + result.response.toString());
+    
 
     return result;
   }
@@ -104,31 +111,33 @@ class _HomePageState extends State<HomePage> {
                             ),
                           ),
                           Expanded(
-                            flex: 3,
-                            child: ListView(
-                              padding: const EdgeInsets.all(25.0),
-                              children: [
-                                SizedBox(
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: Text('Employee ID : ' + '${widget.loginData.identity.empId}'),
+                              flex: 3,
+                              child: ListView(
+                                padding: const EdgeInsets.all(25.0),
+                                children: [
+                                  SizedBox(
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: Text('Employee ID : ' +
+                                          '${widget.loginData.identity.empId}'),
+                                    ),
                                   ),
-                                ),
-                                SizedBox(
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: Text('Name : ' + '${widget.loginData.identity.firstName} ${widget.loginData.identity.lastName}'),
+                                  SizedBox(
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: Text('Name : ' +
+                                          '${widget.loginData.identity.firstName} ${widget.loginData.identity.lastName}'),
+                                    ),
                                   ),
-                                ),SizedBox(                                  
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: Text('Company : ' + '${widget.loginData.identity.company}'),
+                                  SizedBox(
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: Text('Company : ' +
+                                          '${widget.loginData.identity.company}'),
+                                    ),
                                   ),
-                                ),
-                              ],
-
-                            )
-                          ),
+                                ],
+                              )),
                         ],
                         // children: [
                         //   Padding(
@@ -176,24 +185,29 @@ class _HomePageState extends State<HomePage> {
                       // This creates two columns with two items in each column
                       children: [
                         // Container()
-                        if (listCodeMenu.contains("Check in") == true)
+                        if (listCodeMenu.contains("CHECKIN") == true && addFace)
                           MenuBox(
                               name: "Check in",
                               icon: Icons.access_time_outlined,
                               function: MainCheckinPage(
                                   loginData: widget.loginData, imagePath: '')),
-                        if (listCodeMenu.contains("Leave") == true)
+                        if (listCodeMenu.contains("LEAVE") == true)
                           MenuBox(
                               name: "Leave",
                               icon: Icons.calendar_today,
                               function: MainCheckinPage(
                                   loginData: widget.loginData, imagePath: '')),
-                        if (listCodeMenu.contains("PaySlip") == true)
+                        if (listCodeMenu.contains("PAYSLIP") == true)
                           MenuBox(
                               name: "PaySlip",
                               icon: Icons.money,
                               function: MainCheckinPage(
                                   loginData: widget.loginData, imagePath: '')),
+                        if (listCodeMenu.contains(widget.loginData.identity.username) == true && !addFace)
+                          MenuBox(
+                              name: "Scan",
+                              icon: Icons.face,
+                              function: AdminPage()),
                       ],
                     );
                   }

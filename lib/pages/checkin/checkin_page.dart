@@ -1,11 +1,15 @@
 import 'dart:async';
 
+import 'package:alice/database/database.dart';
 import 'package:alice/pages/checkin/camera/camera_review.dart';
 import 'package:alice/pages/checkin/main_checkin_page.dart';
 import 'package:alice/pages/checkin/widgets/contains_picture.dart';
 import 'package:alice/result/user_login_result.dart';
 import 'package:alice/services/connectivity.dart';
+import 'package:alice/services/facenet_service.dart';
 import 'package:alice/services/firebase_service.dart';
+import 'package:alice/services/ml_kit_service.dart';
+import 'package:camera/camera.dart';
 
 import 'package:flutter/material.dart';
 
@@ -25,6 +29,14 @@ class CheckinPage extends StatefulWidget {
 }
 
 class _CheckinPageState extends State<CheckinPage> {
+  FaceNetService _faceNetService = FaceNetService();
+  MLKitService _mlKitService = MLKitService();
+  DataBaseService _dataBaseService = DataBaseService();
+
+  CameraDescription cameraDescription;
+
+  bool loading = false;
+
   String _timeString;
   var longS = "";
   var latS = "";
@@ -39,6 +51,32 @@ class _CheckinPageState extends State<CheckinPage> {
     Timer.periodic(Duration(seconds: 1), (Timer t) => _getTime());
     super.initState();
     getLocation();
+    _startUp();
+  }
+
+  _startUp() async {
+    _setLoading(true);
+
+    List<CameraDescription> cameras = await availableCameras();
+
+    /// takes the front camera
+    cameraDescription = cameras.firstWhere(
+      (CameraDescription camera) =>
+          camera.lensDirection == CameraLensDirection.front,
+    );
+
+    // start the services
+    await _faceNetService.loadModel();
+    await _dataBaseService.loadDB(widget.loginData.identity.username);
+    _mlKitService.initialize();
+
+    _setLoading(false);
+  }
+
+  _setLoading(bool value) {
+    setState(() {
+      loading = value;
+    });
   }
 
   void getLocation() async {
@@ -102,7 +140,8 @@ class _CheckinPageState extends State<CheckinPage> {
   }
 
   Future<void> saveAddress() async {
-    String photoref = await uploadToStorageThread(widget.imagePath, widget.loginData.identity.username);
+    String photoref = await uploadToStorageThread(
+        widget.imagePath, widget.loginData.identity.username);
     var response = await http.post(
         Uri.parse(
             'https://alice-api-service-dev.gb2bnm5p3ohuo.ap-southeast-1.cs.amazonlightsail.com/Service/CheckIn'),
@@ -181,7 +220,8 @@ class _CheckinPageState extends State<CheckinPage> {
                                 MaterialPageRoute(
                                     builder: (BuildContext context) =>
                                         TakePictureScreen(
-                                            loginData: widget.loginData)));
+                                            loginData: widget.loginData,
+                                            cameraDescription: cameraDescription)));
                           } else {
                             saveAddress();
 

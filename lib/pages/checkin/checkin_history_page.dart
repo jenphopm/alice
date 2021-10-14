@@ -3,7 +3,7 @@ import 'package:alice/result/checkin_history_result.dart';
 import 'package:alice/result/user_login_result.dart';
 import 'package:alice/timeline_date_box.dart';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
+// import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
 
 class CheckinHistoryPage extends StatefulWidget {
@@ -20,24 +20,24 @@ class _CheckinHistoryPageState extends State<CheckinHistoryPage> {
     super.initState();
 
     print('init state');
-    getHistoryData();
+    // getHistoryData();
   }
 
-  Future<CheckinHistoryResult> getHistoryData() async {
-    print('get data');
-    var url = Uri.parse(
-        'https://alice-api-service-dev.gb2bnm5p3ohuo.ap-southeast-1.cs.amazonlightsail.com/Service/HistoryCheckIn');
-    var response =
-        await http.post(url, body: {'Token': widget.loginData.token});
+  // Future<CheckinHistoryResult> getHistoryData() async {
+  //   print('get data');
+  //   var url = Uri.parse(
+  //       'https://alice-api-service-dev.gb2bnm5p3ohuo.ap-southeast-1.cs.amazonlightsail.com/Service/HistoryCheckIn');
+  //   var response =
+  //       await http.post(url, body: {'Token': widget.loginData.token});
 
-    print(response.body);
+  //   print(response.body);
 
-    var result = checkinHistoryResultFromJson(response.body);
+  //   var result = checkinHistoryResultFromJson(response.body);
 
-    print("result " + result.response.toString());
+  //   print("result " + result.response.toString());
 
-    return result;
-  }
+  //   return result;
+  // }
 
   @override
   Widget build(BuildContext context) {

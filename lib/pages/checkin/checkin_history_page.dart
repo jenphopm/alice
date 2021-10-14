@@ -45,17 +45,8 @@ class _CheckinHistoryPageState extends State<CheckinHistoryPage> {
         appBar: AppBar(
           title: Text('CHECK IN HISTORY'),
         ),
-<<<<<<< HEAD
         body:
             Consumer(builder: (context, CheckinHistory provider, Widget child) {
-=======
-        body: Consumer(
-            builder: (context, CheckinHistory provider, Widget child) {
-          if (provider.checkinHisList.length <= 0) {
-            provider.getHistoryData(widget.loginData.token);
-          }
-
->>>>>>> 48997d25fb9d9b1d9186b5e7e08c658d07007361
           List dateData = [];
           provider.checkinHisList.forEach((element) {
             dateData.add(element.date);

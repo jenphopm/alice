@@ -29,7 +29,7 @@ class _LoginPageState extends State<LoginPage> {
     var url = Uri.parse(
         'https://alice-api-service-dev.gb2bnm5p3ohuo.ap-southeast-1.cs.amazonlightsail.com/Service/VerifyAuth');
     var response = await http
-        .post(url, body: {'user':_username.text, 'pass': _password.text});
+        .post(url, body: {'user': _username.text, 'pass': _password.text});
     print("response ${response.body}");
 
     // var result = response.body;
@@ -69,15 +69,19 @@ class _LoginPageState extends State<LoginPage> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: Text('Alice Login'),
+          title: Center(child: Text('Alice Login')),
           backgroundColor: Color(0xff9ed8c1),
+          automaticallyImplyLeading: false,
         ),
         body: Consumer(builder: (context, UserDemo provider, Widget child) {
           return Form(
               child: Column(
             children: [
+              SizedBox(
+                height: 50,
+              ),
               Padding(
-                padding: EdgeInsets.all(10),
+                padding: EdgeInsets.fromLTRB(30, 15, 30, 15),
                 child: TextField(
                     controller: _username,
                     onChanged: provider.setUsername,
@@ -86,7 +90,7 @@ class _LoginPageState extends State<LoginPage> {
                         border: OutlineInputBorder(), labelText: 'Username')),
               ),
               Padding(
-                padding: EdgeInsets.all(10),
+                padding: EdgeInsets.fromLTRB(30, 15, 30, 15),
                 child: TextField(
                     controller: _password,
                     onChanged: provider.setPassword,
@@ -96,7 +100,7 @@ class _LoginPageState extends State<LoginPage> {
               ),
               Expanded(child: SizedBox()),
               Padding(
-                padding: const EdgeInsets.all(8.0),
+                padding: const EdgeInsets.fromLTRB(30, 15, 30, 15),
                 child: SizedBox(
                     width: double.maxFinite,
                     child: ElevatedButton(

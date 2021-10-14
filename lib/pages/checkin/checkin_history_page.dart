@@ -1,8 +1,10 @@
 import 'package:alice/result/checkin_history_result.dart';
 import 'package:alice/stat_box.dart';
 import 'package:alice/result/user_login_result.dart';
+import 'package:alice/timeline_date_box.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:timeline_tile/timeline_tile.dart';
 
 class CheckinHistoryPage extends StatefulWidget {
   final UserLoginResult loginData;
@@ -27,7 +29,7 @@ class _CheckinHistoryPageState extends State<CheckinHistoryPage> {
         'https://alice-api-service-dev.gb2bnm5p3ohuo.ap-southeast-1.cs.amazonlightsail.com/Service/HistoryCheckIn');
     var response =
         await http.post(url, body: {'Token': widget.loginData.token});
-    
+
     print(response.body);
 
     var result = checkinHistoryResultFromJson(response.body);
@@ -47,23 +49,61 @@ class _CheckinHistoryPageState extends State<CheckinHistoryPage> {
         builder: (BuildContext context,
             AsyncSnapshot<CheckinHistoryResult> snapshot) {
           if (snapshot.connectionState == ConnectionState.done) {
-            return ListView.builder(
-              itemCount: snapshot.data.response.length ?? 0,
-              itemBuilder: (context, index) {
-                Response dataCheckin = snapshot.data.response[index];
-                return Column(
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: StatBox(
-                        title: dataCheckin.timeStamp,
-                        text:
-                            "${dataCheckin.subLocality}, ${dataCheckin.locality}, ${dataCheckin.province}, ${dataCheckin.country}, ${dataCheckin.postalCode} ",
-                      ),
-                    ),
-                  ],
-                );
-              },
+            List<Response> dataHistory = snapshot.data.response;
+            List dateData = [];
+            dataHistory.forEach((element) => dateData.add(element.date));
+            dateData = dateData.toSet().toList();
+            // List<Response> dataTimelineDate = snapshot.data.response;
+            //         dataMenu.forEach(
+            //             (element) => listCodeMenu.add(element.codeMenu));
+            return Column(
+              children: [
+                SizedBox(
+                  height: 10,
+                ),
+                Expanded(
+                  child: ListView.builder(
+                    itemCount: dateData.length ?? 0,
+                    itemBuilder: (context, index) {
+                      List<Response> dataHistoryDate = [];
+                      dataHistory.forEach((element) => {
+                            if (dateData[index] == element.date)
+                              {dataHistoryDate.add(element)}
+                          });
+                      // return Column(
+                      //   children: [
+                      //     Padding(
+                      //       padding: const EdgeInsets.all(8.0),
+                      //       child: StatBox(
+                      //         title: dataCheckin.timeStamp,
+                      //         text:
+                      //             "${dataCheckin.subLocality}, ${dataCheckin.locality}, ${dataCheckin.province}, ${dataCheckin.country}, ${dataCheckin.postalCode} ",
+                      //       ),
+                      //     ),
+                      //   ],
+                      // );
+                      return Padding(
+                        padding: const EdgeInsets.fromLTRB(15, 10, 15, 10),
+                        child:
+                            TimelineDateBox(dateData[index], dataHistoryDate),
+                      );
+                      // return TimelineTile(
+                      //   alignment: TimelineAlign.manual,
+                      //   lineXY: 0.2,
+                      //   // startChild: Text('startChild'),
+                      //   endChild: Padding(
+                      //     padding: const EdgeInsets.all(8.0),
+                      //     child: StatBox(
+                      //       title: dataCheckin.timeStamp,
+                      //       text:
+                      //           "${dataCheckin.subLocality}, ${dataCheckin.locality}, ${dataCheckin.province}, ${dataCheckin.country}, ${dataCheckin.postalCode} ",
+                      //     ),
+                      //   ),
+                      // );
+                    },
+                  ),
+                ),
+              ],
             );
           }
 

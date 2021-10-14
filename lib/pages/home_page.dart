@@ -106,31 +106,33 @@ class _HomePageState extends State<HomePage> {
                             ),
                           ),
                           Expanded(
-                            flex: 3,
-                            child: ListView(
-                              padding: const EdgeInsets.all(25.0),
-                              children: [
-                                SizedBox(
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: Text('Employee ID : ' + '${widget.loginData.identity.empId}'),
+                              flex: 3,
+                              child: ListView(
+                                padding: const EdgeInsets.all(25.0),
+                                children: [
+                                  SizedBox(
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: Text('Employee ID : ' +
+                                          '${widget.loginData.identity.empId}'),
+                                    ),
                                   ),
-                                ),
-                                SizedBox(
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: Text('Name : ' + '${widget.loginData.identity.firstName} ${widget.loginData.identity.lastName}'),
+                                  SizedBox(
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: Text('Name : ' +
+                                          '${widget.loginData.identity.firstName} ${widget.loginData.identity.lastName}'),
+                                    ),
                                   ),
-                                ),SizedBox(                                  
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: Text('Company : ' + '${widget.loginData.identity.company}'),
+                                  SizedBox(
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: Text('Company : ' +
+                                          '${widget.loginData.identity.company}'),
+                                    ),
                                   ),
-                                ),
-                              ],
-
-                            )
-                          ),
+                                ],
+                              )),
                         ],
                         // children: [
                         //   Padding(
@@ -178,19 +180,19 @@ class _HomePageState extends State<HomePage> {
                       // This creates two columns with two items in each column
                       children: [
                         // Container()
-                        if (listCodeMenu.contains("Check in") == true)
+                        if (listCodeMenu.contains("CHECKIN") == true)
                           MenuBox(
                               name: "Check in",
                               icon: Icons.access_time_outlined,
                               function: MainCheckinPage(
                                   loginData: widget.loginData, imagePath: '')),
-                        if (listCodeMenu.contains("Leave") == true)
+                        if (listCodeMenu.contains("LEAVE") == true)
                           MenuBox(
                               name: "Leave",
                               icon: Icons.calendar_today,
                               function: MainCheckinPage(
                                   loginData: widget.loginData, imagePath: '')),
-                        if (listCodeMenu.contains("PaySlip") == true)
+                        if (listCodeMenu.contains("PAYSLIP") == true)
                           MenuBox(
                               name: "PaySlip",
                               icon: Icons.money,

@@ -41,6 +41,15 @@ class _LoginPageState extends State<LoginPage> {
           context,
           MaterialPageRoute(
               builder: (BuildContext context) => MainPage(loginData: result)));
+    } else {
+      showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: Text('เข้าสู่ระบบไม่สำเร็จ'),
+              content: Text('Username หรือ Password ไม่ถูกต้อง'),
+            );
+          });
     }
 
     return result;

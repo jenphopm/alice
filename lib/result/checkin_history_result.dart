@@ -21,18 +21,14 @@ class CheckinHistoryResult {
 
   factory CheckinHistoryResult.fromJson(Map<String, dynamic> json) =>
       CheckinHistoryResult(
-        status: json["status"] == null ? null : json["status"],
-        response: json["response"] == null
-            ? null
-            : List<Response>.from(
-                json["response"].map((x) => Response.fromJson(x))),
+        status: json["status"],
+        response: List<Response>.from(
+            json["response"].map((x) => Response.fromJson(x))),
       );
 
   Map<String, dynamic> toJson() => {
-        "status": status == null ? null : status,
-        "response": response == null
-            ? null
-            : List<dynamic>.from(response.map((x) => x.toJson())),
+        "status": status,
+        "response": List<dynamic>.from(response.map((x) => x.toJson())),
       };
 }
 
@@ -46,6 +42,11 @@ class Response {
     this.country,
     this.postalCode,
     this.timeStamp,
+    this.date,
+    this.time,
+    this.ip4,
+    this.host,
+    this.network,
   });
 
   String username;
@@ -56,26 +57,41 @@ class Response {
   String country;
   String postalCode;
   String timeStamp;
+  String date;
+  String time;
+  String ip4;
+  String host;
+  String network;
 
   factory Response.fromJson(Map<String, dynamic> json) => Response(
-        username: json["USERNAME"] == null ? null : json["USERNAME"],
-        street: json["STREET"] == null ? null : json["STREET"],
-        subLocality: json["SUB_LOCALITY"] == null ? null : json["SUB_LOCALITY"],
-        locality: json["LOCALITY"] == null ? null : json["LOCALITY"],
-        province: json["PROVINCE"] == null ? null : json["PROVINCE"],
-        country: json["COUNTRY"] == null ? null : json["COUNTRY"],
-        postalCode: json["POSTAL_CODE"] == null ? null : json["POSTAL_CODE"],
-        timeStamp: json["TIME_STAMP"] == null ? null : json["TIME_STAMP"],
+        username: json["USERNAME"],
+        street: json["STREET"],
+        subLocality: json["SUB_LOCALITY"],
+        locality: json["LOCALITY"],
+        province: json["PROVINCE"],
+        country: json["COUNTRY"],
+        postalCode: json["POSTAL_CODE"],
+        timeStamp: json["TIME_STAMP"],
+        date: json["DATE"],
+        time: json["TIME"],
+        ip4: json["IP4"],
+        host: json["HOST"],
+        network: json["NETWORK"],
       );
 
   Map<String, dynamic> toJson() => {
-        "USERNAME": username == null ? null : username,
-        "STREET": street == null ? null : street,
-        "SUB_LOCALITY": subLocality == null ? null : subLocality,
-        "LOCALITY": locality == null ? null : locality,
-        "PROVINCE": province == null ? null : province,
-        "COUNTRY": country == null ? null : country,
-        "POSTAL_CODE": postalCode == null ? null : postalCode,
-        "TIME_STAMP": timeStamp == null ? null : timeStamp,
+        "USERNAME": username,
+        "STREET": street,
+        "SUB_LOCALITY": subLocality,
+        "LOCALITY": locality,
+        "PROVINCE": province,
+        "COUNTRY": country,
+        "POSTAL_CODE": postalCode,
+        "TIME_STAMP": timeStamp,
+        "DATE": date,
+        "TIME": time,
+        "IP4": ip4,
+        "HOST": host,
+        "NETWORK": network,
       };
 }

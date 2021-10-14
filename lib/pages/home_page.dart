@@ -1,11 +1,13 @@
 import 'package:alice/menu_box.dart';
 import 'package:alice/pages/admin/home_page.dart';
 import 'package:alice/pages/login_page.dart';
+import 'package:alice/provider/model_data.dart';
 import 'package:alice/result/menu_result.dart';
 import 'package:alice/result/user_login_result.dart';
 import 'package:alice/services/firebase_service.dart';
 import 'package:flutter/material.dart';
 import 'package:alice/database/database.dart';
+import 'package:provider/provider.dart';
 
 import 'checkin/main_checkin_page.dart';
 import 'package:device_info/device_info.dart';
@@ -88,118 +90,125 @@ class _HomePageState extends State<HomePage> {
             )
           ],
         ),
-        body: Column(
-          children: [
-            SizedBox(
-                child: FutureBuilder(
-                  builder:
-                      (BuildContext context, AsyncSnapshot<void> snapshot) {
-                    if (snapshot.connectionState == ConnectionState.done) {
-                      return Row(
-                        children: <Widget>[
-                          Expanded(
-                            flex: 1,
-                            child: Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: SizedBox(
-                                width: 100,
-                                child: Image.network(
-                                  urlphoto,
-                                  height: 100,
+        body: Consumer(builder: (context, UserDemo provider, Widget child) {
+          return Column(
+            children: [
+              SizedBox(
+                  child: FutureBuilder(
+                    builder:
+                        (BuildContext context, AsyncSnapshot<void> snapshot) {
+                      if (snapshot.connectionState == ConnectionState.done) {
+                        return Row(
+                          children: <Widget>[
+                            Expanded(
+                              flex: 1,
+                              child: Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: SizedBox(
                                   width: 100,
-                                  fit: BoxFit.fitWidth,
+                                  child: Image.network(
+                                    urlphoto,
+                                    height: 100,
+                                    width: 100,
+                                    fit: BoxFit.fitWidth,
+                                  ),
                                 ),
                               ),
                             ),
-                          ),
-                          Expanded(
-                              flex: 3,
-                              child: ListView(
-                                padding: const EdgeInsets.all(25.0),
-                                children: [
-                                  SizedBox(
-                                    child: Padding(
-                                      padding: const EdgeInsets.all(8.0),
-                                      child: Text('Employee ID : ' +
-                                          '${widget.loginData.identity.empId}'),
+                            Expanded(
+                                flex: 3,
+                                child: ListView(
+                                  padding: const EdgeInsets.all(25.0),
+                                  children: [
+                                    SizedBox(
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: Text('Employee ID : ' +
+                                            '${widget.loginData.identity.empId}'), //provider.username
+                                      ),
                                     ),
-                                  ),
-                                  SizedBox(
-                                    child: Padding(
-                                      padding: const EdgeInsets.all(8.0),
-                                      child: Text('Name : ' +
-                                          '${widget.loginData.identity.firstName} ${widget.loginData.identity.lastName}'),
+                                    SizedBox(
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: Text('Name : ' +
+                                            '${widget.loginData.identity.firstName} ${widget.loginData.identity.lastName}'),
+                                      ),
                                     ),
-                                  ),
-                                  SizedBox(
-                                    child: Padding(
-                                      padding: const EdgeInsets.all(8.0),
-                                      child: Text('Company : ' +
-                                          '${widget.loginData.identity.company}'),
+                                    SizedBox(
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: Text('Company : ' +
+                                            '${widget.loginData.identity.company}'),
+                                      ),
                                     ),
-                                  ),
-                                ],
-                              )),
+                                  ],
+                                )),
+                          ],
+                        );
+                      }
+                      // return LinearProgressIndicator();
+                      return Container();
+                    },
+                    future: getPhoto(),
+                  ),
+                  height: 150),
+              Expanded(
+                child: FutureBuilder(
+                  builder: (BuildContext context,
+                      AsyncSnapshot<MenuResult> snapshot) {
+                    if (snapshot.connectionState == ConnectionState.done) {
+                      List<Response> dataMenu = snapshot.data.response;
+                      dataMenu.forEach(
+                          (element) => listCodeMenu.add(element.codeMenu));
+                      return GridView.count(
+                        // crossAxisCount is the number of columns
+                        crossAxisCount: 4,
+                        // This creates two columns with two items in each column
+                        children: [
+                          // Container()
+                          if (listCodeMenu.contains("CHECKIN") == true &&
+                              addFace)
+                            MenuBox(
+                                name: "Check in",
+                                icon: Icons.access_time_outlined,
+                                function: MainCheckinPage(
+                                    loginData: widget.loginData,
+                                    imagePath: '')),
+                          if (listCodeMenu.contains("LEAVE") == true)
+                            MenuBox(
+                                name: "Leave",
+                                icon: Icons.calendar_today,
+                                function: MainCheckinPage(
+                                    loginData: widget.loginData,
+                                    imagePath: '')),
+                          if (listCodeMenu.contains("PAYSLIP") == true)
+                            MenuBox(
+                                name: "PaySlip",
+                                icon: Icons.money,
+                                function: MainCheckinPage(
+                                    loginData: widget.loginData,
+                                    imagePath: '')),
+                          if (listCodeMenu.contains(
+                                      widget.loginData.identity.username) ==
+                                  true &&
+                              !addFace)
+                            MenuBox(
+                                name: "Scan",
+                                icon: Icons.face,
+                                function:
+                                    AdminPage(loginData: widget.loginData)),
                         ],
                       );
                     }
+
                     // return LinearProgressIndicator();
                     return Container();
                   },
-                  future: getPhoto(),
+                  future: getMenuData(),
                 ),
-                height: 150),
-            Expanded(
-              child: FutureBuilder(
-                builder:
-                    (BuildContext context, AsyncSnapshot<MenuResult> snapshot) {
-                  if (snapshot.connectionState == ConnectionState.done) {
-                    List<Response> dataMenu = snapshot.data.response;
-                    dataMenu.forEach(
-                        (element) => listCodeMenu.add(element.codeMenu));
-                    return GridView.count(
-                      // crossAxisCount is the number of columns
-                      crossAxisCount: 4,
-                      // This creates two columns with two items in each column
-                      children: [
-                        // Container()
-                        if (listCodeMenu.contains("CHECKIN") == true && addFace)
-                          MenuBox(
-                              name: "Check in",
-                              icon: Icons.access_time_outlined,
-                              function: MainCheckinPage(
-                                  loginData: widget.loginData, imagePath: '')),
-                        if (listCodeMenu.contains("LEAVE") == true)
-                          MenuBox(
-                              name: "Leave",
-                              icon: Icons.calendar_today,
-                              function: MainCheckinPage(
-                                  loginData: widget.loginData, imagePath: '')),
-                        if (listCodeMenu.contains("PAYSLIP") == true)
-                          MenuBox(
-                              name: "PaySlip",
-                              icon: Icons.money,
-                              function: MainCheckinPage(
-                                  loginData: widget.loginData, imagePath: '')),
-                        if (listCodeMenu.contains(
-                                    widget.loginData.identity.username) ==
-                                true &&
-                            !addFace)
-                          MenuBox(
-                              name: "Scan",
-                              icon: Icons.face,
-                              function: AdminPage(loginData: widget.loginData)),
-                      ],
-                    );
-                  }
-
-                  // return LinearProgressIndicator();
-                  return Container();
-                },
-                future: getMenuData(),
               ),
-            ),
-          ],
-        ));
+            ],
+          );
+        }));
   }
 }

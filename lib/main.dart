@@ -1,7 +1,9 @@
 import 'package:alice/pages/login_page.dart';
+import 'package:alice/provider/model_data.dart';
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:provider/provider.dart';
 
 List<CameraDescription> cameras = [];
 
@@ -15,10 +17,17 @@ void main() async {
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Alice App',
-      theme: ThemeData(primarySwatch: Colors.green),
-      home: MyHomePage(),
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (context){
+          return UserDemo();
+        }),
+      ],
+      child: MaterialApp(
+        title: 'Alice App',
+        theme: ThemeData(primarySwatch: Colors.green),
+        home: MyHomePage(),
+      ),
     );
   }
 }

@@ -19,9 +19,12 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (context){
+        ChangeNotifierProvider(create: (context) {
           return UserDemo();
         }),
+        ChangeNotifierProvider(create: (context) {
+          return CheckinHistory();
+        })
       ],
       child: MaterialApp(
         title: 'Alice App',

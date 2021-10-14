@@ -1,3 +1,4 @@
+import 'package:alice/result/checkin_history_result.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
@@ -9,7 +10,7 @@ class UserDemo with ChangeNotifier {
     return username;
   }
 
-  String getPassword(){
+  String getPassword() {
     return password;
   }
 
@@ -20,6 +21,19 @@ class UserDemo with ChangeNotifier {
 
   setPassword(String pass) {
     password = pass;
+    notifyListeners();
+  }
+}
+
+class CheckinHistory with ChangeNotifier {
+  List<Response> checkinHisList = [];
+
+  List<Response> getCheckinHisList() {
+    return checkinHisList;
+  }
+
+  setCheckinHisList(Response checkinHisRes) {
+    checkinHisList.add(checkinHisRes);
     notifyListeners();
   }
 }

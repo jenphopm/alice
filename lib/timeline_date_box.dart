@@ -20,6 +20,7 @@ class TimelineDateBox extends StatelessWidget {
           Align(alignment: Alignment.centerLeft, child: Text('$dateData')),
           ListView.builder(
               shrinkWrap: true,
+              physics: NeverScrollableScrollPhysics(),
               itemCount: dataHistoryDate.length ?? 0,
               itemBuilder: (context, index) {
                 return TimelineTile(

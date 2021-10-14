@@ -141,34 +141,10 @@ class _HomePageState extends State<HomePage> {
                                 ],
                               )),
                         ],
-                        // children: [
-                        //   Padding(
-                        //     padding: const EdgeInsets.all(8.0),
-                        //     child: SizedBox(
-                        //       width: 100,
-                        //       child: Image.network(
-                        //         urlphoto,
-                        //         height: 100,
-                        //         width: 100,
-                        //         fit: BoxFit.fitWidth,
-                        //       ),
-                        //     ),
-                        //   ),
-                        //   SizedBox(
-                        //     height: 20,
-                        //     child: Container(
-                        //       width: 285,
-                        //       color: Colors.blue,
-                        //       height: 100,
-                        //     ),
-                        //     // child: Text(
-                        //     //     '${widget.loginData.identity.empId}  ${widget.loginData.identity.firstName}  ${widget.loginData.identity.lastName}'),
-                        //     // width: 200,
-                        //   ),
-                        // ],
                       );
                     }
-                    return LinearProgressIndicator();
+                    // return LinearProgressIndicator();
+                    return Container();
                   },
                   future: getPhoto(),
                 ),
@@ -217,7 +193,8 @@ class _HomePageState extends State<HomePage> {
                     );
                   }
 
-                  return LinearProgressIndicator();
+                  // return LinearProgressIndicator();
+                  return Container();
                 },
                 future: getMenuData(),
               ),

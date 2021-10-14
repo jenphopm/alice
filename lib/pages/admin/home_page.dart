@@ -62,9 +62,11 @@ class AdminPageState extends State<AdminPage> {
     return Scaffold(
       backgroundColor: Colors.green[50],
       appBar: AppBar(
-        leading: Container(),
-        elevation: 0,
-        backgroundColor: Colors.transparent,
+        title: Text('FACE REGISTER'),
+        backgroundColor: Color(0xff9ed8c1),
+        // leading: Container(),
+        // elevation: 0,
+        // backgroundColor: Colors.transparent,
       ),
       body: !loading
           ? SafeArea(

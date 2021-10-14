@@ -21,7 +21,7 @@ class _MainPageState extends State<MainPage> {
             children: [
               HomePage(loginData: widget.loginData),
               Container(
-                color: Colors.green,
+                color: Colors.black,
               ),
             ],
           ),

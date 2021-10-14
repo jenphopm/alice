@@ -4,6 +4,7 @@ import 'package:alice/database/database.dart';
 import 'package:alice/pages/checkin/camera/camera_review.dart';
 import 'package:alice/pages/checkin/main_checkin_page.dart';
 import 'package:alice/pages/checkin/widgets/contains_picture.dart';
+import 'package:alice/provider/model_data.dart';
 import 'package:alice/result/user_login_result.dart';
 import 'package:alice/services/connectivity.dart';
 import 'package:alice/services/facenet_service.dart';
@@ -17,6 +18,7 @@ import 'package:intl/intl.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:http/http.dart' as http;
+import 'package:provider/provider.dart';
 
 class CheckinPage extends StatefulWidget {
   final UserLoginResult loginData;
@@ -32,7 +34,6 @@ class _CheckinPageState extends State<CheckinPage> {
   FaceNetService _faceNetService = FaceNetService();
   MLKitService _mlKitService = MLKitService();
   DataBaseService _dataBaseService = DataBaseService();
-  Timer _timer;
 
   CameraDescription cameraDescription;
 
@@ -49,16 +50,10 @@ class _CheckinPageState extends State<CheckinPage> {
   @override
   void initState() {
     _timeString = _formatDateTime(DateTime.now());
-    _timer = Timer.periodic(Duration(seconds: 1), (Timer t) => _getTime());
+    Timer.periodic(Duration(seconds: 1), (Timer t) => _getTime());
     super.initState();
     getLocation();
-    // _startUp();
-  }
-
-  @override
-  void dispose() {
-    _timer.cancel();
-    super.dispose();
+    _startUp();
   }
 
   _startUp() async {
@@ -173,7 +168,7 @@ class _CheckinPageState extends State<CheckinPage> {
   @override
   Widget build(BuildContext context) {
     var locationResult;
-    print("loginData " + widget.loginData.token);
+    // print("loginData " + widget.loginData.token);
     if (longS == "" && latS == "") {
       locationResult = LinearProgressIndicator();
     } else {
@@ -188,86 +183,79 @@ class _CheckinPageState extends State<CheckinPage> {
           title: Text("ALICE CHECK IN"),
           // automaticallyImplyLeading: false
         ),
-        body: Column(
-          children: [
-            Container(
-              height: 100,
-              padding: const EdgeInsets.all(10),
-              decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(10),
-                  color: Color(0xffFFFFFF)),
-              child: Center(
-                child: Column(
-                  children: [
-                    Text(
-                      _timeString,
-                      style: TextStyle(fontSize: 20, color: Colors.blue),
-                    ),
-                    SizedBox(
-                      height: 10,
-                    ),
-                    locationResult
-                  ],
+        body:
+            Consumer(builder: (context, CheckinHistory provider, Widget child) {
+          return Column(
+            children: [
+              Container(
+                height: 100,
+                padding: const EdgeInsets.all(10),
+                decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10),
+                    color: Color(0xffFFFFFF)),
+                child: Center(
+                  child: Column(
+                    children: [
+                      Text(
+                        _timeString,
+                        style: TextStyle(fontSize: 20, color: Colors.blue),
+                      ),
+                      SizedBox(
+                        height: 10,
+                      ),
+                      locationResult
+                    ],
+                  ),
                 ),
               ),
-            ),
-            widget.imagePath.isNotEmpty
-                ? ContainsPicture(height: 475, imagePath: widget.imagePath)
-                : Container(),
-            Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: SizedBox(
-                    width: double.maxFinite,
-                    child: ElevatedButton(
-                        child: Text('CHECK IN NOW'),
-                        onPressed: () async {
-                          if (widget.imagePath.isEmpty) {
-                            _startUp();
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (BuildContext context) =>
-                                        TakePictureScreen(
-                                            loginData: widget.loginData,
-                                            cameraDescription:
-                                                cameraDescription)));
-                          } else {
-                            saveAddress();
-
-                            showDialog(
-                              context: context,
-                              builder: (context) => AlertDialog(
-                                  title: const Text('Success'),
-                                  content: const Text('Check in success'),
-                                  actions: <Widget>[
-                                    TextButton(
-                                      onPressed: () => Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (BuildContext context) =>
-                                                  MainCheckinPage(
-                                                      loginData:
-                                                          widget.loginData,
-                                                      imagePath: ''))),
-                                      child: const Text('OK'),
-                                    ),
-                                  ]),
-                            );
-                          }
-                        }))),
-            // Expanded(child: SizedBox()),
-            // Padding(
-            //   padding: const EdgeInsets.all(8.0),
-            //   child: SizedBox(
-            //       width: double.maxFinite,
-            //       child: ElevatedButton(
-            //           child: Text('Logout'),
-            //           onPressed: () {
-            //             Navigator.pop(context);
-            //           })),
-            // )
-          ],
-        ));
+              widget.imagePath.isNotEmpty
+                  ? ContainsPicture(height: 475, imagePath: widget.imagePath)
+                  : Container(),
+              Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: SizedBox(
+                      width: double.maxFinite,
+                      child: ElevatedButton(
+                          child: Text('CHECK IN NOW'),
+                          onPressed: () async {
+                            if (widget.imagePath.isEmpty) {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (BuildContext context) =>
+                                          TakePictureScreen(
+                                              loginData: widget.loginData,
+                                              cameraDescription:
+                                                  cameraDescription)));
+                            } else {
+                              saveAddress().then((value) async {
+                                await provider
+                                    .getHistoryData(widget.loginData.token);
+                              }).then((value) => showDialog(
+                                    context: context,
+                                    builder: (context) => AlertDialog(
+                                        title: const Text('Success'),
+                                        content: const Text('Check in success'),
+                                        actions: <Widget>[
+                                          TextButton(
+                                            onPressed: () => Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                    builder: (BuildContext
+                                                            context) =>
+                                                        MainCheckinPage(
+                                                            loginData: widget
+                                                                .loginData,
+                                                            imagePath: ''))),
+                                            child: const Text('OK'),
+                                          ),
+                                        ]),
+                                  ));
+                            }
+                          }))),
+            ],
+          );
+        }));
   }
 
   void _getTime() {

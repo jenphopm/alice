@@ -29,7 +29,7 @@ class UserDemo with ChangeNotifier {
 class CheckinHistory with ChangeNotifier {
   List<Response> checkinHisList = [];
 
-  void getHistoryData(token) async {
+  getHistoryData(token) async {
     print('get data');
     var url = Uri.parse(
         'https://alice-api-service-dev.gb2bnm5p3ohuo.ap-southeast-1.cs.amazonlightsail.com/Service/HistoryCheckIn');

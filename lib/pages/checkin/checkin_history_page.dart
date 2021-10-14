@@ -55,7 +55,11 @@ class _CheckinHistoryPageState extends State<CheckinHistoryPage> {
             itemCount: provider.checkinHisList.length,
             itemBuilder: (context, int index) {
               Response data = provider.checkinHisList[index];
-              return Container();
+              return Container(
+                child: Text(
+                  data.username
+                ),
+              );
             },
           );
         }));

@@ -90,7 +90,8 @@ class _HomePageState extends State<HomePage> {
             )
           ],
         ),
-        body: Consumer(builder: (context, CheckinHistory provider, Widget child) {
+        body:
+            Consumer(builder: (context, CheckinHistory provider, Widget child) {
           provider.getHistoryData(widget.loginData.token);
           return Column(
             children: [

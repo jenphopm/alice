@@ -246,8 +246,8 @@ class _CheckinPageState extends State<CheckinPage> {
                               ))),
                           onPressed: () async {
                             if (widget.imagePath.isEmpty) {
-                              _startUp();
-                              Navigator.push(
+                              await _startUp();
+                              await Navigator.push(
                                   context,
                                   MaterialPageRoute(
                                       builder: (BuildContext context) =>

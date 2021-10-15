@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:alice/pages/main_page.dart';
 import 'package:alice/pages/widgets/auth_action_button.dart';
 import 'package:alice/pages/widgets/camera_header.dart';
 import 'package:alice/pages/widgets/face_painter.dart';
@@ -13,12 +14,11 @@ import 'package:flutter/material.dart';
 import 'package:google_ml_kit/google_ml_kit.dart';
 import 'dart:math' as math;
 
-
-
 class TakePictureScreen extends StatefulWidget {
   final UserLoginResult loginData;
   final CameraDescription cameraDescription;
-  const TakePictureScreen({Key key, this.loginData, this.cameraDescription}) : super(key: key);
+  const TakePictureScreen({Key key, this.loginData, this.cameraDescription})
+      : super(key: key);
 
   @override
   _TakePictureScreenState createState() => _TakePictureScreenState();
@@ -58,7 +58,6 @@ class _TakePictureScreenState extends State<TakePictureScreen> {
   }
 
   _startUp() async {
-
     _initializeControllerFuture =
         _cameraService.startService(widget.cameraDescription);
     await _initializeControllerFuture;
@@ -159,9 +158,21 @@ class _TakePictureScreenState extends State<TakePictureScreen> {
     final double mirror = math.pi;
     final width = MediaQuery.of(context).size.width;
     final height = MediaQuery.of(context).size.height;
-    
+
     return Scaffold(
-      appBar: AppBar(title: const Text('FACE RECOGNITION')),
+      appBar: AppBar(
+        title: const Text('FACE RECOGNITION'),
+        backgroundColor: Color(0xff9ed8c1),
+        leading: IconButton(
+            icon: Icon(Icons.arrow_back_ios_new),
+            onPressed: () {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (BuildContext context) =>
+                          MainPage(loginData: widget.loginData)));
+            }),
+      ),
       body: Stack(
         children: [
           FutureBuilder<void>(
@@ -185,30 +196,28 @@ class _TakePictureScreenState extends State<TakePictureScreen> {
                       scale: 1.0,
                       alignment: Alignment.center,
                       child: Stack(
-                                fit: StackFit.expand,                              
-                                children: <Widget>[
-                                  CameraPreview(
-                                      _cameraService.cameraController),
-                                  CustomPaint(
-                                    painter: FacePainter(
-                                        face: faceDetected,
-                                        imageSize: imageSize),
-                                  )
-                                ],
-                              ),
+                        fit: StackFit.expand,
+                        children: <Widget>[
+                          CameraPreview(_cameraService.cameraController),
+                          CustomPaint(
+                            painter: FacePainter(
+                                face: faceDetected, imageSize: imageSize),
+                          )
+                        ],
+                      ),
                     );
                   }
                 } else {
                   return Center(child: CircularProgressIndicator());
                 }
               }),
-          CameraHeader(
-            "FACE CAPTURE",
-            onBackPressed: _onBackPressed,
-          )
+          // CameraHeader(
+          //   "FACE CAPTURE",
+          //   onBackPressed: _onBackPressed,
+          // )
         ],
       ),
-      
+
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       floatingActionButton: !_bottomSheetVisible
           ? AuthActionButton(
@@ -219,7 +228,7 @@ class _TakePictureScreenState extends State<TakePictureScreen> {
               loginData: widget.loginData,
             )
           : Container(),
-      
+
       // floatingActionButton: FloatingActionButton(
       //   onPressed: () async {
       //     try {
@@ -241,8 +250,6 @@ class _TakePictureScreenState extends State<TakePictureScreen> {
       //   },
       //   child: const Icon(Icons.camera_alt),
       // ),
-    
-    
     );
   }
 }

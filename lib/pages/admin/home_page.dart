@@ -1,5 +1,6 @@
 import 'package:alice/database/database.dart';
 import 'package:alice/face_auth/sign_up.dart';
+import 'package:alice/pages/main_page.dart';
 import 'package:alice/result/user_login_result.dart';
 import 'package:alice/services/facenet_service.dart';
 import 'package:alice/services/ml_kit_service.dart';
@@ -64,6 +65,15 @@ class AdminPageState extends State<AdminPage> {
       appBar: AppBar(
         title: Text('FACE REGISTER'),
         backgroundColor: Color(0xff9ed8c1),
+        leading: IconButton(
+            icon: Icon(Icons.arrow_back_ios_new),
+            onPressed: () {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (BuildContext context) =>
+                          MainPage(loginData: widget.loginData)));
+            }),
         // leading: Container(),
         // elevation: 0,
         // backgroundColor: Colors.transparent,

@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:io';
 import 'dart:math' as math;
+import 'package:alice/pages/main_page.dart';
 import 'package:alice/pages/widgets/face_painter.dart';
 import 'package:alice/pages/widgets/auth_action_button.dart';
 import 'package:alice/pages/widgets/camera_header.dart';
@@ -15,7 +16,9 @@ import 'package:flutter/material.dart';
 class SignUp extends StatefulWidget {
   final CameraDescription cameraDescription;
   final UserLoginResult loginData;
-  const SignUp({Key key, @required this.cameraDescription, @required this.loginData}) : super(key: key);
+  const SignUp(
+      {Key key, @required this.cameraDescription, @required this.loginData})
+      : super(key: key);
 
   @override
   SignUpState createState() => SignUpState();
@@ -158,6 +161,19 @@ class SignUpState extends State<SignUp> {
     final width = MediaQuery.of(context).size.width;
     final height = MediaQuery.of(context).size.height;
     return Scaffold(
+        appBar: AppBar(
+          title: Text('FACE REGISTER'),
+          backgroundColor: Color(0xff9ed8c1),
+          leading: IconButton(
+              icon: Icon(Icons.arrow_back_ios_new),
+              onPressed: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (BuildContext context) =>
+                            MainPage(loginData: widget.loginData)));
+              }),
+        ),
         body: Stack(
           children: [
             FutureBuilder<void>(
@@ -213,10 +229,10 @@ class SignUpState extends State<SignUp> {
                 }
               },
             ),
-            CameraHeader(
-              "SIGN UP",
-              onBackPressed: _onBackPressed,
-            )
+            // CameraHeader(
+            //   "SIGN UP",
+            //   onBackPressed: _onBackPressed,
+            // )
           ],
         ),
         floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,

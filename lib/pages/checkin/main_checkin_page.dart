@@ -24,7 +24,7 @@ class _MainCheckinPageState extends State<MainCheckinPage> {
       CheckinPage(loginData: widget.loginData, imagePath: widget.imagePath),
       CheckinHistoryPage(loginData: widget.loginData)
     ];
-    
+
     List<Tab> tab = [
       Tab(
         icon: Icon(Icons.access_time_outlined),
@@ -32,7 +32,7 @@ class _MainCheckinPageState extends State<MainCheckinPage> {
       ),
       Tab(
         icon: Icon(Icons.history),
-        text: 'CHECK IN HISTORY',
+        text: 'HISTORY',
       )
     ];
 

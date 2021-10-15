@@ -44,7 +44,7 @@ class _CheckinHistoryPageState extends State<CheckinHistoryPage> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: Text('CHECK IN HISTORY'),
+          title: Text('HISTORY'),
           backgroundColor: Color(0xff9ed8c1),
           leading: IconButton(
               icon: Icon(Icons.arrow_back_ios_new),

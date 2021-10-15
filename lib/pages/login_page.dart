@@ -129,7 +129,19 @@ class _LoginPageState extends State<LoginPage> {
                     onPressed: () {
                       login();
                     })),
-          )
+          ),
+          Expanded(child: SizedBox()),
+          Center(child: Text('Version 0.0.1')),
+          SizedBox(
+            height: 5,
+          ),
+
+          Center(
+              child: Text(
+                  'Copyright©2021.WorthPerfect Co., Ltd. Rights Reserved')),
+          SizedBox(
+            height: 30,
+          ),
         ],
       ));
     }));

@@ -4,6 +4,7 @@ import 'package:alice/database/database.dart';
 import 'package:alice/pages/checkin/camera/camera_review.dart';
 import 'package:alice/pages/checkin/main_checkin_page.dart';
 import 'package:alice/pages/checkin/widgets/contains_picture.dart';
+import 'package:alice/pages/main_page.dart';
 import 'package:alice/provider/model_data.dart';
 import 'package:alice/result/user_login_result.dart';
 import 'package:alice/services/connectivity.dart';
@@ -34,6 +35,7 @@ class _CheckinPageState extends State<CheckinPage> {
   FaceNetService _faceNetService = FaceNetService();
   MLKitService _mlKitService = MLKitService();
   DataBaseService _dataBaseService = DataBaseService();
+  Timer _timer;
 
   CameraDescription cameraDescription;
 
@@ -50,10 +52,16 @@ class _CheckinPageState extends State<CheckinPage> {
   @override
   void initState() {
     _timeString = _formatDateTime(DateTime.now());
-    Timer.periodic(Duration(seconds: 1), (Timer t) => _getTime());
+    _timer = Timer.periodic(Duration(seconds: 1), (Timer t) => _getTime());
     super.initState();
     getLocation();
-    _startUp();
+    // _startUp();
+  }
+
+  @override
+  void dispose() {
+    _timer.cancel();
+    super.dispose();
   }
 
   _startUp() async {
@@ -181,6 +189,16 @@ class _CheckinPageState extends State<CheckinPage> {
     return Scaffold(
         appBar: AppBar(
           title: Text("ALICE CHECK IN"),
+          backgroundColor: Color(0xff9ed8c1),
+          leading: IconButton(
+              icon: Icon(Icons.arrow_back_ios_new),
+              onPressed: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (BuildContext context) =>
+                            MainPage(loginData: widget.loginData)));
+              }),
           // automaticallyImplyLeading: false
         ),
         body:
@@ -212,13 +230,23 @@ class _CheckinPageState extends State<CheckinPage> {
                   ? ContainsPicture(height: 475, imagePath: widget.imagePath)
                   : Container(),
               Padding(
-                  padding: const EdgeInsets.all(8.0),
+                  padding: const EdgeInsets.fromLTRB(30, 10, 30, 10),
                   child: SizedBox(
                       width: double.maxFinite,
                       child: ElevatedButton(
                           child: Text('CHECK IN NOW'),
+                          style: ButtonStyle(
+                              backgroundColor:
+                                  MaterialStateProperty.all(Color(0xff9ed8c1)),
+                              shape: MaterialStateProperty.all<
+                                      RoundedRectangleBorder>(
+                                  RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(18.0),
+                                // side: BorderSide(color: Colors.red)
+                              ))),
                           onPressed: () async {
                             if (widget.imagePath.isEmpty) {
+                              _startUp();
                               Navigator.push(
                                   context,
                                   MaterialPageRoute(

@@ -1,3 +1,4 @@
+import 'package:alice/pages/main_page.dart';
 import 'package:alice/provider/model_data.dart';
 import 'package:alice/result/checkin_history_result.dart';
 import 'package:alice/result/user_login_result.dart';
@@ -44,9 +45,19 @@ class _CheckinHistoryPageState extends State<CheckinHistoryPage> {
     return Scaffold(
         appBar: AppBar(
           title: Text('CHECK IN HISTORY'),
+          backgroundColor: Color(0xff9ed8c1),
+          leading: IconButton(
+              icon: Icon(Icons.arrow_back_ios_new),
+              onPressed: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (BuildContext context) =>
+                            MainPage(loginData: widget.loginData)));
+              }),
         ),
-        body:
-            Consumer(builder: (context, CheckinHistory provider, Widget child) {
+        body: Consumer(
+            builder: (context, CheckinHistory provider, Widget child) {
           List dateData = [];
           provider.checkinHisList.forEach((element) {
             dateData.add(element.date);
